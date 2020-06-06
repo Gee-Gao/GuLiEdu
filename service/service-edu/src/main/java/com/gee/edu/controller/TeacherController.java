@@ -126,5 +126,13 @@ public class TeacherController {
             return R.error();
         }
     }
+
+    //根据id查询讲师
+    @ApiOperation("根据id查询讲师")
+    @GetMapping("getTeacher/{id}")
+    public R getTeacher(@ApiParam(name = "id",value = "讲师id") @PathVariable String id){
+        Teacher teacher = teacherService.getById(id);
+        return R.ok().data("teacher",teacher);
+    }
 }
 
