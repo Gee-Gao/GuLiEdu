@@ -112,7 +112,19 @@ public class TeacherController {
         List<Teacher> records = pageTeacher.getRecords();
         //返回数据
         return R.ok().data("total", total).data("rows", records);
+    }
 
+    //添加讲师
+    @ApiOperation("添加讲师")
+    @PostMapping("addTeacher")
+    public R addTeacher(@ApiParam(name = "teacher", value = "添加对象") @RequestBody Teacher teacher) {
+        boolean save = teacherService.save(teacher);
+        //返回添加结果
+        if (save) {
+            return R.ok();
+        } else {
+            return R.error();
+        }
     }
 }
 
