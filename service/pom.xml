@@ -16,13 +16,6 @@
     </modules>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.gee</groupId>
-            <artifactId>common-utils</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
         <dependency>
             <groupId>com.gee</groupId>
             <artifactId>service-base</artifactId>
