@@ -1,6 +1,7 @@
 package com.gee.edu.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gee.commonutils.R;
 import com.gee.edu.entity.Teacher;
 import com.gee.edu.service.TeacherService;
@@ -43,6 +44,27 @@ public class TeacherController {
         } else {
             return R.error();
         }
+    }
+
+    //分页查询
+    @ApiOperation(value = "分页讲师列表")
+    @GetMapping("{page}/{limit}")
+    public R pageList(
+            @ApiParam(name = "page", value = "当前页码", required = true)
+            @PathVariable Long page,
+            @ApiParam(name = "limit", value = "每页记录数", required = true)
+            @PathVariable Long limit) {
+        //创建Page对象
+        Page<Teacher> pageParam = new Page<>(page, limit);
+
+        //调用方式实现分页
+        teacherService.page(pageParam, null);
+        //数据list集合
+        List<Teacher> records = pageParam.getRecords();
+        //数据总记录数
+        long total = pageParam.getTotal();
+        //返回结果
+        return R.ok().data("total", total).data("rows", records);
     }
 }
 
