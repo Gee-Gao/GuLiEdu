@@ -130,9 +130,22 @@ public class TeacherController {
     //根据id查询讲师
     @ApiOperation("根据id查询讲师")
     @GetMapping("getTeacher/{id}")
-    public R getTeacher(@ApiParam(name = "id",value = "讲师id") @PathVariable String id){
+    public R getTeacher(@ApiParam(name = "id", value = "讲师id") @PathVariable String id) {
         Teacher teacher = teacherService.getById(id);
-        return R.ok().data("teacher",teacher);
+        return R.ok().data("teacher", teacher);
+    }
+
+    //修改讲师
+    @ApiOperation("修改讲师")
+    @PostMapping("updateTeacher")
+    public R updateTeacher(@ApiParam(name = "teacher", value = "被修改讲师") @RequestBody Teacher teacher) {
+        boolean flag = teacherService.updateById(teacher);
+        //返回修改结果
+        if (flag) {
+            return R.ok();
+        } else {
+            return R.error();
+        }
     }
 }
 
