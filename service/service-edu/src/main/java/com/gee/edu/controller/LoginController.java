@@ -2,13 +2,11 @@ package com.gee.edu.controller;
 
 import com.gee.commonutils.R;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("eduservice/user")
+@CrossOrigin//解决跨域
 public class LoginController {
     //用户登录
     @ApiOperation("用户登录")
