@@ -2,9 +2,7 @@
   <div class="app-container">
     <!-- 表格 -->
     <el-table
-      v-loading="listLoading"
       :data="list"
-      element-loading-text="数据加载中"
       border
       fit
       highlight-current-row>
