@@ -25,7 +25,9 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/edu/teacher")
+@CrossOrigin
 public class TeacherController {
+
     @Resource
     private TeacherService teacherService;
 
