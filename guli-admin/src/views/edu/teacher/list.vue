@@ -120,6 +120,29 @@
         this.teacherQuery={};
         //查询所有讲师数据
         this.getList()
+      },
+      //删除讲师
+      removeDataById(id){
+        this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(()=>{
+          teacher.deleteTeacherById(id).then(()=>{
+            //提示信息
+            this.$message({
+              type:'success',
+              message:'删除成功'
+            })
+            //删除后重新查询
+            this.getList();
+          })
+         ;
+        }).catch(response=>{
+          if (response === 'cancel') {
+          }
+        })
+
       }
 
 

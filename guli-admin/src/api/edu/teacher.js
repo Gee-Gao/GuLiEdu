@@ -9,5 +9,13 @@ export default {
       //data表示使用json传递到接口
       data: teacherQuery
     })
-  }
+  },
+  //删除讲师
+  deleteTeacherById(id){
+    return request({
+      url: `/edu/teacher/${id}`,
+      method: 'delete',
+    })
+  },
+
 }
