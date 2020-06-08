@@ -105,6 +105,10 @@ public class TeacherController {
         if (!StringUtils.isEmpty(end)) {
             wrapper.le("gmt_create", end);
         }
+
+        //排序
+        wrapper.orderByDesc("gmt_create");
+
         //调用方法实现条件查询分页
         teacherService.page(pageTeacher, wrapper);
 
