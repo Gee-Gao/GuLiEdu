@@ -142,10 +142,7 @@
           if (response === 'cancel') {
           }
         })
-
       }
-
-
     },
   }
 </script>
