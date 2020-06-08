@@ -50,12 +50,26 @@
       }
     },
     created() {
-      if (this.$route.params && this.$route.params.id) {
-        const id = this.$route.params.id
-        this.getTeacherInfoById(id);
+      this.init();
+    },
+    watch: {
+      $route() {
+        this.init();
       }
     },
     methods: {
+      init(){
+        //如果路径有id值，进行修改操作
+        if (this.$route.params && this.$route.params.id) {
+          //从路径中获取id值
+          const id = this.$route.params.id
+          //根据id进行查询
+          this.getTeacherInfoById(id);
+        }else{//路径中没有id，进行添加操作
+          //清空表单
+          this.teacher={};
+        }
+      },
       saveOrUpdate() {
         if(!this.teacher.id){
           this.saveTeacher();
