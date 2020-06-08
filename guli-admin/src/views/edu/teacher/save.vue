@@ -49,6 +49,10 @@
       }
     },
     created() {
+      if (this.$route.params && this.$route.params.id) {
+        const id = this.$route.params.id
+        this.getTeacherInfoById(id);
+      }
     },
     methods: {
       saveOrUpdate() {
@@ -65,6 +69,13 @@
           //回到列表页面
           this.$router.push({path:'/teacher/table'});
         })
+      },
+
+      //根据id获得讲师信息
+      getTeacherInfoById(id){
+        teacher.getTeacherInfoById(id).then(response=>{
+          this.teacher= response.data.teacher;
+        });
       }
     }
   }

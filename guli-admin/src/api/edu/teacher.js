@@ -28,4 +28,12 @@ export default {
     })
   },
 
+  //根据id获得讲师信息
+  getTeacherInfoById(id){
+    return request({
+      url: `/edu/teacher/getTeacher/${id}`,
+      method: 'get'
+    })
+  }
+
 }
