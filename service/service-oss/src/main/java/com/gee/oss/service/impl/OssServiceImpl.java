@@ -4,10 +4,12 @@ import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.gee.oss.service.OssService;
 import com.gee.oss.utils.ConstPropertiesUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.util.UUID;
 
 @Service
 public class OssServiceImpl implements OssService {
@@ -24,8 +26,12 @@ public class OssServiceImpl implements OssService {
             OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
             //获取上传文件输入流
             InputStream inputStream = file.getInputStream();
-            //获取文件名称
-            String filename = file.getOriginalFilename();
+            //获取文件名称拓展名
+            String ext = StringUtils.substringAfterLast(file.getOriginalFilename(), ".");
+            //文件名加入UUID,
+            String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+
+            String filename = "avatar/" + uuid + "." + ext;
             //调用oss方法实现上传，
             ossClient.putObject(bucketName, filename, inputStream);
             // 关闭OSSClient。
