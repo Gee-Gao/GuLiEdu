@@ -34,6 +34,15 @@ export default {
       url: `/edu/teacher/getTeacher/${id}`,
       method: 'get'
     })
+  },
+
+  //修改讲师
+  updateTeacher(teacher){
+    return request({
+      url: `/edu/teacher/updateTeacher`,
+      method: 'post',
+      data:teacher
+    })
   }
 
 }

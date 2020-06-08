@@ -34,6 +34,7 @@
 </template>
 <script>
   import teacher from "../../../api/edu/teacher";
+
   export default {
     data() {
       return {
@@ -56,26 +57,44 @@
     },
     methods: {
       saveOrUpdate() {
-        this.saveTeacher();
+        if(!this.teacher.id){
+          this.saveTeacher();
+        }else {
+          this.updateTeacher();
+        }
+
       },
       //添加讲师
       saveTeacher() {
-        teacher.addTeacher(this.teacher).then(()=>{
+        teacher.addTeacher(this.teacher).then(() => {
           //提示信息
           this.$message({
-            type:'success',
-            message:'添加成功'
+            type: 'success',
+            message: '添加成功'
           });
           //回到列表页面
-          this.$router.push({path:'/teacher/table'});
+          this.$router.push({path: '/teacher/table'});
         })
       },
 
       //根据id获得讲师信息
-      getTeacherInfoById(id){
-        teacher.getTeacherInfoById(id).then(response=>{
-          this.teacher= response.data.teacher;
+      getTeacherInfoById(id) {
+        teacher.getTeacherInfoById(id).then(response => {
+          this.teacher = response.data.teacher;
         });
+      },
+
+      //修改讲师
+      updateTeacher() {
+        teacher.updateTeacher(this.teacher).then(() => {
+          //提示信息
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          });
+          //回到列表页面
+          this.$router.push({path: '/teacher/table'});
+        })
       }
     }
   }
