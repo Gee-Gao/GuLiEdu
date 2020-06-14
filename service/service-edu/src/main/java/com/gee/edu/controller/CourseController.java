@@ -1,10 +1,14 @@
 package com.gee.edu.controller;
 
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.gee.commonutils.R;
+import com.gee.edu.entity.vo.CourseInfoVo;
+import com.gee.edu.service.CourseService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -18,6 +22,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/eduservice/course")
 @CrossOrigin
 public class CourseController {
+    @Resource
+    private CourseService courseService;
+
+    //添加课程基本信息
+    @ApiOperation("添加课程基本信息")
+    @PostMapping("addCourseInfo")
+    public R addCourseInfo(@ApiParam("课程信息对象") @RequestBody CourseInfoVo courseInfoVo) {
+        courseService.saveCourseInfo(courseInfoVo);
+        return R.ok();
+    }
+
 
 }
 
