@@ -67,6 +67,30 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/subject',
+    component: Layout,
+    redirect: '/subject/list',
+    name: '课程管理',
+    meta: { title: '课程管理', icon: 'example' },
+    children: [
+      {
+        path: 'table',
+        name: '课程列表',
+        component: () => import('@/views/edu/subject/list'),
+        meta: { title: '课程列表', icon: 'table' }
+      },
+      {
+        path: 'save',
+        name: '添加课程',
+        component: () => import('@/views/edu/subject/save'),
+        meta: { title: '添加课程', icon: 'tree' }
+      }
+    ]
+  },
+
+
+
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
