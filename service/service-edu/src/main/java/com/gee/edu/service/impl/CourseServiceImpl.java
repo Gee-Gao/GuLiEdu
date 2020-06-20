@@ -28,7 +28,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     //添加课程基本信息
     @Override
-    public void saveCourseInfo(CourseInfoVo courseInfoVo) {
+    public String saveCourseInfo(CourseInfoVo courseInfoVo) {
         //向课程表添加课程基本信息
         //CourseInfoVo对象转换为Course对象
         Course course = new Course();
@@ -47,6 +47,6 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         courseDescription.setDescription(courseInfoVo.getDescription());
         courseDescription.setId(cid);
         courseDescriptionService.save(courseDescription);
-
+        return cid;
     }
 }

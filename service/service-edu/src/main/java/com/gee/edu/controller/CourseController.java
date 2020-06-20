@@ -29,8 +29,9 @@ public class CourseController {
     @ApiOperation("添加课程基本信息")
     @PostMapping("addCourseInfo")
     public R addCourseInfo(@ApiParam("课程信息对象") @RequestBody CourseInfoVo courseInfoVo) {
-        courseService.saveCourseInfo(courseInfoVo);
-        return R.ok();
+        //返回添加课程的id,方便添加课程大纲
+        String id = courseService.saveCourseInfo(courseInfoVo);
+        return R.ok().data("courseId",id);
     }
 
 

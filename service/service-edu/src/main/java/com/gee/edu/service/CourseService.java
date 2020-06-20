@@ -14,5 +14,5 @@ import com.gee.edu.entity.vo.CourseInfoVo;
  */
 public interface CourseService extends IService<Course> {
 
-    void saveCourseInfo(CourseInfoVo courseInfoVo);
+   String saveCourseInfo(CourseInfoVo courseInfoVo);
 }
