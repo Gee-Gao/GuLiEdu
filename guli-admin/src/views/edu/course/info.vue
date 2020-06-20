@@ -16,8 +16,27 @@
         <el-input v-model="courseInfo.title" placeholder=" 示例：机器学习项目课：从基础到搭建项目视频课程。专业名称注意大小写"/>
       </el-form-item>
 
-      <!-- 所属分类 TODO -->
+      <!-- 所属分类 -->
+      <el-form-item label="课程分类">
+        <el-select
+          v-model="courseInfo.subjectParentId"
+          placeholder="一级分类" @change="subjectOneListChanged">
+          <el-option
+            v-for="subject in subjectOneList"
+            :key="subject.id"
+            :label="subject.title"
+            :value="subject.id"/>
+        </el-select>
 
+        <!-- 二级分类 -->
+        <el-select v-model="courseInfo.subjectId" placeholder="二级分类">
+          <el-option
+            v-for="subject in subjectTwoList"
+            :key="subject.value"
+            :label="subject.title"
+            :value="subject.id"/>
+        </el-select>
+      </el-form-item>
       <!-- 课程讲师 -->
       <el-form-item label="课程讲师">
         <el-select
@@ -55,6 +74,7 @@
 
 <script>
   import course from "../../../api/edu/course";
+  import subject from "../../../api/edu/subject";
 
   export default {
     data() {
@@ -62,6 +82,7 @@
         saveBtnDisabled: false, // 保存按钮是否禁用
         courseInfo: {
           title: '',
+          subjectParentId: '',
           subjectId: '',
           teacherId: '',
           lessonNum: 0,
@@ -70,15 +91,41 @@
           price: 0
         },
         teacherList: [],
+        subjectOneList: [],
+        subjectTwoList: [],
       }
     },
 
     created() {
       //初始化所有讲师
-      this.getListTeacher()
+      this.getListTeacher();
+      //初始化一级分类
+      this.getOneSubject();
     },
 
     methods: {
+      //切换一级分类，显示对应二级分类
+      subjectOneListChanged(subjectOneId) {
+        //遍历所有的分类，包含一级和二级
+        for (let i = 0; i < this.subjectOneList.length; i++) {
+          //每个一级分类
+          let oneSubject = this.subjectOneList[i];
+
+          if (subjectOneId == oneSubject.id) {
+            //从一级分类获取所有的二级分类
+            this.subjectTwoList = oneSubject.children;
+            //把二级分类id值清空
+            this.courseInfo.subjectId = "";
+          }
+
+        }
+      },
+      //查询所有一级分类
+      getOneSubject() {
+        subject.getSubjectList().then(response => {
+          this.subjectOneList = response.data.list
+        })
+      },
       //查询所有讲师
       getListTeacher() {
         course.getListTeacher().then(response => {
