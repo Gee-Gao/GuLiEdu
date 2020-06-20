@@ -58,7 +58,20 @@
       <el-form-item label="课程简介">
         <el-input v-model="courseInfo.description" placeholder=" 示例：机器学习项目课：从基础到搭建项目视频课程。专业名称注意大小写"/>
       </el-form-item>
-      <!-- 课程封面 TODO -->
+
+      <!-- 课程封面-->
+      <el-form-item label="课程封面">
+
+        <el-upload
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+          :action="BASE_API+'/eduoss/fileoss'"
+          class="avatar-uploader">
+          <img :src="courseInfo.cover">
+        </el-upload>
+
+      </el-form-item>
 
       <el-form-item label="课程价格">
         <el-input-number :min="0" v-model="courseInfo.price" controls-position="right" placeholder="免费课程请设置为0元"/>
@@ -87,12 +100,13 @@
           teacherId: '',
           lessonNum: 0,
           description: '',
-          cover: '',
+          cover: '/static/1.png',
           price: 0
         },
         teacherList: [],
         subjectOneList: [],
         subjectTwoList: [],
+        BASE_API: process.env.BASE_API // 接口API地址
       }
     },
 
@@ -104,13 +118,34 @@
     },
 
     methods: {
+      handleAvatarSuccess(res) {
+        this.courseInfo.cover = res.data.url
+      },
+
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isPNG = file.type === 'image/png';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+        let isPicture = false;
+        if (!isJPG && !isPNG) {
+          this.$message.error('上传头像图片只能是JPG格式或PNG格式!')
+        }else {
+          isPicture = true;
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!')
+        }
+
+        return isPicture && isLt2M;
+      },
+
+
       //切换一级分类，显示对应二级分类
       subjectOneListChanged(subjectOneId) {
         //遍历所有的分类，包含一级和二级
         for (let i = 0; i < this.subjectOneList.length; i++) {
           //每个一级分类
           let oneSubject = this.subjectOneList[i];
-
           if (subjectOneId == oneSubject.id) {
             //从一级分类获取所有的二级分类
             this.subjectTwoList = oneSubject.children;
