@@ -92,7 +92,7 @@
 
   export default {
     //声明组件
-    components: { Tinymce },
+    components: {Tinymce},
     data() {
       return {
         saveBtnDisabled: false, // 保存按钮是否禁用
@@ -106,6 +106,7 @@
           cover: '/static/1.png',
           price: 0
         },
+        courseId: "",
         teacherList: [],
         subjectOneList: [],
         subjectTwoList: [],
@@ -114,17 +115,50 @@
     },
 
     created() {
-      //初始化所有讲师
-      this.getListTeacher();
-      //初始化一级分类
-      this.getOneSubject();
+      //获取路经中的id
+      if (this.$route.params && this.$route.params.id) {
+        this.courseId = this.$route.params.id;
+        this.getInfo();
+      } else {
+        //初始化所有讲师
+        this.getListTeacher();
+        //初始化一级分类
+        this.getOneSubject();
+      }
+
     },
 
     methods: {
+      //根据课程id查询
+      getInfo() {
+        course.getCourseInfoById(this.courseId).then(response => {
+          //在courseInfo中包含一级分类id和二级分类id
+          this.courseInfo = response.data.courseInfoVo;
+          //查询所有的分类，包含一级和二级
+          subject.getSubjectList().then(response => {
+            //获取一级分类的id
+            this.subjectOneList = response.data.list;
+            //把所有的一级分类数组进行遍历，比较当前courseInfo里面一级分类id和所有的一级分类id
+            for (let i = 0; i < this.subjectOneList.length; i++) {
+              //获取每个一级分类
+              let oneSubject = this.subjectOneList[i];
+              //比较当前courseInfo里面一级分类id和所有一级分类id
+              if (this.courseInfo.subjectParentId == oneSubject.id) {
+                //获取一级分类下所有的二级分类id
+                this.subjectTwoList = oneSubject.children;
+              }
+            }
+          })
+          //初始化所有讲师
+          this.getListTeacher();
+        });
+      },
+
+      //上传封面之后
       handleAvatarSuccess(res) {
         this.courseInfo.cover = res.data.url
       },
-
+      //上传封面之前
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
         const isPNG = file.type === 'image/png';
@@ -132,7 +166,7 @@
         let isPicture = false;
         if (!isJPG && !isPNG) {
           this.$message.error('上传头像图片只能是JPG格式或PNG格式!')
-        }else {
+        } else {
           isPicture = true;
         }
         if (!isLt2M) {

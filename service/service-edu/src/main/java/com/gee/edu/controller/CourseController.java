@@ -31,9 +31,23 @@ public class CourseController {
     public R addCourseInfo(@ApiParam("课程信息对象") @RequestBody CourseInfoVo courseInfoVo) {
         //返回添加课程的id,方便添加课程大纲
         String id = courseService.saveCourseInfo(courseInfoVo);
-        return R.ok().data("courseId",id);
+        return R.ok().data("courseId", id);
     }
 
+    //根据课程id查询课程基本信息
+    @ApiOperation("根据课程id查询课程基本信息")
+    @GetMapping("getCourseInfo/{courseId}")
+    public R getCourseInfo(@ApiParam("课程id") @PathVariable String courseId) {
+        CourseInfoVo courseInfoVo = courseService.getCourseInfo(courseId);
+        return R.ok().data("courseInfoVo", courseInfoVo);
+    }
 
+    //修改课程信息
+    @ApiOperation("修改课程信息")
+    @PostMapping("updateCourseInfo")
+    public R updateCourseInfo(@ApiParam("课程信息对象") @RequestBody CourseInfoVo courseInfoVo) {
+        courseService.updateCourseInfo(courseInfoVo);
+        return R.ok();
+    }
 }
 
