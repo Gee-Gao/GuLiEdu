@@ -17,4 +17,7 @@ import java.util.List;
 public interface ChapterService extends IService<Chapter> {
     //课程大纲列表,根据课程id进行查询
     List<ChapterVo> etChapterVideoByCourseId(String courseId);
+
+    //删除章节
+    boolean deleteChapter(String chapterId);
 }

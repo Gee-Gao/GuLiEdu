@@ -9,6 +9,7 @@ import com.gee.edu.entity.chapter.VideoVo;
 import com.gee.edu.mapper.ChapterMapper;
 import com.gee.edu.service.ChapterService;
 import com.gee.edu.service.VideoService;
+import com.gee.servicebase.exceptionhandler.GuliException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -57,9 +58,9 @@ public class ChapterServiceImpl extends ServiceImpl<ChapterMapper, Chapter> impl
             //遍历查询小姐list进行封装
             for (Video video : videos) {
                 //判断小节里面的id和章节的id是否相同
-                if(video.getChapterId().equals(chapter.getId())){
+                if (video.getChapterId().equals(chapter.getId())) {
                     VideoVo videoVo = new VideoVo();
-                    BeanUtils.copyProperties(video,videoVo);
+                    BeanUtils.copyProperties(video, videoVo);
                     videoList.add(videoVo);
                 }
             }
@@ -68,5 +69,23 @@ public class ChapterServiceImpl extends ServiceImpl<ChapterMapper, Chapter> impl
         }
 
         return finallList;
+    }
+
+    @Override
+    //删除章节
+    public boolean deleteChapter(String chapterId) {
+        //根据chapterId章节id,查询小节表，如果能查出数据，不进行删除
+        QueryWrapper<Video> wrapper = new QueryWrapper<>();
+        wrapper.eq("chapter_id", chapterId);
+        int count = videoService.count(wrapper);
+
+        //查询出小节不进行删除
+        if (count > 0) {
+            throw new GuliException(20001, "章节中存在小节，不能删除");
+        } else {
+            //删除章节
+            int result = baseMapper.deleteById(chapterId);
+            return result > 0;
+        }
     }
 }
