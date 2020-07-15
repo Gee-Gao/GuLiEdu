@@ -3,6 +3,7 @@ package com.gee.edu.controller;
 
 import com.gee.commonutils.R;
 import com.gee.edu.entity.vo.CourseInfoVo;
+import com.gee.edu.entity.vo.CoursePublishVo;
 import com.gee.edu.service.CourseService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -48,6 +49,14 @@ public class CourseController {
     public R updateCourseInfo(@ApiParam("课程信息对象") @RequestBody CourseInfoVo courseInfoVo) {
         courseService.updateCourseInfo(courseInfoVo);
         return R.ok();
+    }
+
+    //根据课程id查询课程确认信息
+    @ApiOperation("根据课程id查询课程确认信息")
+    @GetMapping("getPublishCourseInfo/{id}")
+    public R getPublishCourseInfo(@ApiParam("课程id") @PathVariable String id) {
+        CoursePublishVo coursePublishVo = courseService.publishCourseInfo(id);
+        return R.ok().data("publishCourse",coursePublishVo);
     }
 }
 

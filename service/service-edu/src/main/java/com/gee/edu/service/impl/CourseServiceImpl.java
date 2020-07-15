@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gee.edu.entity.Course;
 import com.gee.edu.entity.CourseDescription;
 import com.gee.edu.entity.vo.CourseInfoVo;
+import com.gee.edu.entity.vo.CoursePublishVo;
 import com.gee.edu.mapper.CourseMapper;
 import com.gee.edu.service.CourseDescriptionService;
 import com.gee.edu.service.CourseService;
@@ -50,6 +51,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         return cid;
     }
 
+    //根据课程id查询课程确认信息
+    @Override
+    public CoursePublishVo publishCourseInfo(String id) {
+        return baseMapper.getCoursePublishInfo(id);
+    }
 
     //根据课程id查询课程基本信息
     @Override
