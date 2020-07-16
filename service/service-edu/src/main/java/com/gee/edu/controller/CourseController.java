@@ -2,6 +2,7 @@ package com.gee.edu.controller;
 
 
 import com.gee.commonutils.R;
+import com.gee.edu.entity.Course;
 import com.gee.edu.entity.vo.CourseInfoVo;
 import com.gee.edu.entity.vo.CoursePublishVo;
 import com.gee.edu.service.CourseService;
@@ -56,7 +57,18 @@ public class CourseController {
     @GetMapping("getPublishCourseInfo/{id}")
     public R getPublishCourseInfo(@ApiParam("课程id") @PathVariable String id) {
         CoursePublishVo coursePublishVo = courseService.publishCourseInfo(id);
-        return R.ok().data("publishCourse",coursePublishVo);
+        return R.ok().data("publishCourse", coursePublishVo);
+    }
+
+    //课程最终发布，修改课程状态
+    @ApiOperation("课程最终发布，修改课程状态")
+    @PostMapping("publishCourse/{id}")
+    public R publishCourse(@ApiParam("课程id") @PathVariable("id") String id) {
+        Course course = new Course();
+        course.setId(id);
+        course.setStatus("Normal");
+        courseService.updateById(course);
+        return R.ok();
     }
 }
 

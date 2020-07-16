@@ -68,17 +68,24 @@
 
       previous() {
         console.log('previous')
-        this.$router.push({path: '/course/chapter/1'})
+        this.$router.push({path: '/course/chapter/'+this.courseId})
       },
 
       publish() {
-        console.log('publish')
-        this.$router.push({path: '/course/list'})
+        course.publishCourse(this.courseId).then(() => {
+          //提示
+          this.$message({
+            type: 'success',
+            message: `课程发布成功`
+          });
+          //跳转
+          this.$router.push({path: '/course/table'})
+        });
+
       }
     }
   }
 </script>
-
 
 
 <style scoped>
@@ -90,6 +97,7 @@
     margin-bottom: 40px;
     position: relative;
   }
+
   .ccInfo img {
     background: #d6d6d6;
     width: 500px;
@@ -98,6 +106,7 @@
     float: left;
     border: none;
   }
+
   .ccInfo .main {
     margin-left: 520px;
   }
@@ -108,6 +117,7 @@
     line-height: 1;
     font-weight: normal;
   }
+
   .ccInfo .main p {
     margin-bottom: 10px;
     word-wrap: break-word;
@@ -123,6 +133,7 @@
     max-height: 48px;
     overflow: hidden;
   }
+
   .ccInfo .main h3 {
     left: 540px;
     bottom: 20px;
