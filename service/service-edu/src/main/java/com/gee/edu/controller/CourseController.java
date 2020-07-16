@@ -1,16 +1,21 @@
 package com.gee.edu.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gee.commonutils.R;
 import com.gee.edu.entity.Course;
 import com.gee.edu.entity.vo.CourseInfoVo;
 import com.gee.edu.entity.vo.CoursePublishVo;
+import com.gee.edu.entity.vo.CourseQuery;
 import com.gee.edu.service.CourseService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -26,6 +31,62 @@ import javax.annotation.Resource;
 public class CourseController {
     @Resource
     private CourseService courseService;
+
+    //条件查询
+    @ApiOperation(value = "条件查询分页课程列表")
+    @PostMapping("pageCourseCondition/{page}/{limit}")
+    public R pageTeacherCondition(@ApiParam(name = "page", value = "当前页码", required = true)
+                                  @PathVariable Long page,
+                                  @ApiParam(name = "limit", value = "每页记录数", required = true)
+                                  @PathVariable Long limit,
+                                  @ApiParam(name = "courseQuery", value = "查询对象")
+                                  @RequestBody(required = false) CourseQuery courseQuery) {
+        //创建分页对象
+        Page<Course> pageCourse = new Page<>(page, limit);
+        //构建条件
+        QueryWrapper<Course> wrapper = new QueryWrapper<>();
+        //多条件组合查询,判断值是否为空，不为空拼接条件
+        String title= courseQuery.getTitle();
+        String status = courseQuery.getStatus();
+        if (!StringUtils.isEmpty(title)) {
+            wrapper.like("title", title);
+        }
+
+        if (!StringUtils.isEmpty(status)) {
+            wrapper.eq("status", status);
+        }
+
+        //调用方法实现条件查询分页
+        courseService.page(pageCourse, wrapper);
+
+        //总记录数
+        long total = pageCourse.getTotal();
+        //数据集合
+        List<Course> records = pageCourse.getRecords();
+        //返回数据
+        return R.ok().data("total", total).data("rows", records);
+    }
+
+    //分页查询
+    @ApiOperation("分页查询")
+    @GetMapping("pageCourse/{page}/{limit}")
+    public R pageList(
+            @ApiParam(name = "page", value = "当前页码", required = true)
+            @PathVariable Long page,
+            @ApiParam(name = "limit", value = "每页记录数", required = true)
+            @PathVariable Long limit) {
+        //创建Page对象
+        Page<Course> pageParam = new Page<>(page, limit);
+
+        //调用方式实现分页
+        courseService.page(pageParam, null);
+        //数据list集合
+        List<Course> records = pageParam.getRecords();
+        //数据总记录数
+        long total = pageParam.getTotal();
+        //返回结果
+        return R.ok().data("total", total).data("rows", records);
+    }
 
     //添加课程基本信息
     @ApiOperation("添加课程基本信息")

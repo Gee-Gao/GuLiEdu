@@ -45,4 +45,13 @@ export default {
       method: 'post',
     })
   },
+
+  //课程列表
+  getListCoursePage(page,limit,courseQuery) {
+    return request({
+      url: `/eduservice/course/pageCourseCondition/`+page+'/'+limit,
+      method: 'post',
+      data:courseQuery
+    })
+  },
 }
