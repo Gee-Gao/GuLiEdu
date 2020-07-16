@@ -129,7 +129,8 @@
           title: '',
           sort: 0,
           free: 0,
-          videoSourceId: ''
+          videoSourceId: '',
+          videoOriginalName:''
         },
         fileList: [],//上传文件列表
       }
@@ -152,12 +153,15 @@
       },
 
       //上传之前
-      handleUploadExceed(response){
-
+      handleUploadExceed(){
+        this.$message.warning('每个小节只能上传一个视频,想要重新上传视频，请先删除已上传的视频')
       },
       //上传成功
-      handleVodUploadSuccess(response){
-        this.video.videoSourceId = response.data.videoId
+      handleVodUploadSuccess(response,file){
+        //上传之后的视频id
+        this.video.videoSourceId = response.data.videoId;
+        //上传之后的文件名
+        this.video.videoOriginalName = file.name;
       },
 
       /********小节操作*******/
@@ -213,6 +217,7 @@
         this.dialogVideoFormVisible = true;
         //清空表单
         this.video={};
+        this.fileList=[];
         //设置章节id
         this.video.chapterId = chapterId;
       },

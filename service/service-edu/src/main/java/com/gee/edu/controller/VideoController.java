@@ -29,7 +29,6 @@ public class VideoController {
     @ApiOperation("添加小节")
     @PostMapping("addVideo")
     public R addVideo(@RequestBody Video video) {
-System.out.println("添加执行了");
         videoService.save(video);
         return R.ok();
     }
@@ -45,7 +44,6 @@ System.out.println("添加执行了");
     @ApiOperation("修改小节")
     @PostMapping("updateVideo")
     public R updateVideo(@RequestBody Video video) {
-System.out.println("执行了");
         videoService.updateById(video);
         return R.ok();
     }
