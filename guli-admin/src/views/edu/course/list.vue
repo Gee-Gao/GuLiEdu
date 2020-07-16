@@ -49,15 +49,15 @@
 
       <el-table-column label="操作" width="600" align="center">
         <template slot-scope="scope">
-          <router-link :to="'/teacher/edit/'+scope.row.id">
+          <router-link :to="'/course/info/'+scope.row.id">
             <el-button type="primary" size="mini" icon="el-icon-edit">编辑课程基本信息</el-button>
           </router-link>
 
-          <router-link :to="'/teacher/edit/'+scope.row.id">
+          <router-link :to="'/course/chapter/'+scope.row.id">
             <el-button type="primary" size="mini" icon="el-icon-edit">编辑课程大纲</el-button>
           </router-link>
 
-          <el-button type="danger" size="mini"  icon="el-icon-delete" @click="removeDataById(scope.row.id)">删除课程信息
+          <el-button type="danger" size="mini"  icon="el-icon-delete" @click="removeCourse(scope.row.id)">删除课程信息
           </el-button>
         </template>
       </el-table-column>
@@ -93,6 +93,28 @@
       this.getList();
     },
     methods: {
+
+      removeCourse(id){
+        this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          course.deleteCourse(id).then(() => {
+            //提示信息
+            this.$message({
+              type: 'success',
+              message: '删除成功'
+            })
+            //刷新页面
+            this.getList();
+          })
+          ;
+        }).catch(response => {
+          if (response === 'cancel') {
+          }
+        })
+      },
       //获取课程列表
       getList(page=1) {
         this.page=page;

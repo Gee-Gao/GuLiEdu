@@ -46,7 +46,7 @@ public class CourseController {
         //构建条件
         QueryWrapper<Course> wrapper = new QueryWrapper<>();
         //多条件组合查询,判断值是否为空，不为空拼接条件
-        String title= courseQuery.getTitle();
+        String title = courseQuery.getTitle();
         String status = courseQuery.getStatus();
         if (!StringUtils.isEmpty(title)) {
             wrapper.like("title", title);
@@ -129,6 +129,14 @@ public class CourseController {
         course.setId(id);
         course.setStatus("Normal");
         courseService.updateById(course);
+        return R.ok();
+    }
+
+    //删除课程
+    @ApiOperation("删除课程")
+    @DeleteMapping("{courseId}")
+    public R deleteCourse(@ApiParam("课程id") @PathVariable String courseId) {
+        courseService.removeCourse(courseId);
         return R.ok();
     }
 }

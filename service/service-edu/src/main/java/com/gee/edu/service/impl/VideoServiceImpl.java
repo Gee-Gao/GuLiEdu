@@ -1,5 +1,6 @@
 package com.gee.edu.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.gee.edu.entity.Video;
 import com.gee.edu.mapper.VideoMapper;
 import com.gee.edu.service.VideoService;
@@ -16,5 +17,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements VideoService {
-
+    //根据课程id删除小节
+    @Override
+    public void removeVideoByCourseId(String courseId) {
+        QueryWrapper<Video> wrapper = new QueryWrapper<>();
+        wrapper.eq("course_id", courseId);
+        baseMapper.delete(wrapper);
+    }
 }

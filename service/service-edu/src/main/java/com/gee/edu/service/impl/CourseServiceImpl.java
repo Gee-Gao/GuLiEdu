@@ -6,8 +6,10 @@ import com.gee.edu.entity.CourseDescription;
 import com.gee.edu.entity.vo.CourseInfoVo;
 import com.gee.edu.entity.vo.CoursePublishVo;
 import com.gee.edu.mapper.CourseMapper;
+import com.gee.edu.service.ChapterService;
 import com.gee.edu.service.CourseDescriptionService;
 import com.gee.edu.service.CourseService;
+import com.gee.edu.service.VideoService;
 import com.gee.servicebase.exceptionhandler.GuliException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,10 @@ import javax.annotation.Resource;
 public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> implements CourseService {
     @Resource
     private CourseDescriptionService courseDescriptionService;
+    @Resource
+    private VideoService videoService;
+    @Resource
+    private ChapterService chapterService;
 
     //添加课程基本信息
     @Override
@@ -49,6 +55,22 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         courseDescription.setId(cid);
         courseDescriptionService.save(courseDescription);
         return cid;
+    }
+
+    //删除课程
+    @Override
+    public void removeCourse(String courseId) {
+        //根据课程id删除小节
+        videoService.removeVideoByCourseId(courseId);
+        //根据课程id删除章节
+        chapterService.removeChapterByCourseId(courseId);
+        //根据课程id删除描述
+        courseDescriptionService.removeById(courseId);
+        //根据课程id删除课程
+        int result = baseMapper.deleteById(courseId);
+        if (result == 0) {
+            throw new GuliException(20001, "删除失败");
+        }
     }
 
     //根据课程id查询课程确认信息
