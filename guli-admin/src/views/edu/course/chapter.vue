@@ -51,7 +51,7 @@
             :before-remove="beforeVodRemove"
             :on-exceed="handleUploadExceed"
             :file-list="fileList"
-            :action="'http://127.0.0.1:8003/eduvod/video/uploadAliVideo'"
+            :action="BASE_API+'/eduvod/video/uploadAliVideo'"
             :limit="1"
             class="upload-demo">
             <el-button size="small" type="primary">上传视频</el-button>
@@ -60,7 +60,8 @@
                 支持3GP、ASF、AVI、DAT、DV、FLV、F4V、<br>
                 GIF、M2T、M4V、MJ2、MJPEG、MKV、MOV、MP4、<br>
                 MPE、MPG、MPEG、MTS、OGG、QT、RM、RMVB、<br>
-                SWF、TS、VOB、WMV、WEBM 等视频格式上传</div>
+                SWF、TS、VOB、WMV、WEBM 等视频格式上传
+              </div>
               <i class="el-icon-question"/>
             </el-tooltip>
           </el-upload>
@@ -68,7 +69,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVideoFormVisible = false">取 消</el-button>
-        <el-button  type="primary" @click="saveOrUpdateVideo">确 定</el-button>
+        <el-button type="primary" @click="saveOrUpdateVideo">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -130,9 +131,10 @@
           sort: 0,
           free: 0,
           videoSourceId: '',
-          videoOriginalName:''
+          videoOriginalName: ''
         },
         fileList: [],//上传文件列表
+        BASE_API: process.env.BASE_API // 接口API地址
       }
     },
 
@@ -145,19 +147,21 @@
     },
 
     methods: {
-      //删除之前
-      beforeVodRemove(){},
-      //删除成功
-      handleVodRemove(){
+      //点击x时
+      beforeVodRemove(file) {
+        return this.$confirm(`确实删除 ${file.name}?`);
+      },
+      //点击确定删除
+      handleVodRemove() {
 
       },
 
       //上传之前
-      handleUploadExceed(){
+      handleUploadExceed() {
         this.$message.warning('每个小节只能上传一个视频,想要重新上传视频，请先删除已上传的视频')
       },
       //上传成功
-      handleVodUploadSuccess(response,file){
+      handleVodUploadSuccess(response, file) {
         //上传之后的视频id
         this.video.videoSourceId = response.data.videoId;
         //上传之后的文件名
@@ -166,7 +170,7 @@
 
       /********小节操作*******/
       //删除小节
-      removeVideo(videoId){
+      removeVideo(videoId) {
         this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -189,8 +193,8 @@
       },
 
       //修改小节
-      updateVideo(){
-        video.updateVideo(this.video).then(()=>{
+      updateVideo() {
+        video.updateVideo(this.video).then(() => {
           //关闭弹框，
           this.dialogVideoFormVisible = false;
           //提示信息
@@ -204,7 +208,7 @@
       },
 
       //修改小节数据回显
-      openEditVideo(videoId){
+      openEditVideo(videoId) {
         this.dialogVideoFormVisible = true;
         //调用接口
         video.getVideo(videoId).then(response => {
@@ -216,8 +220,8 @@
       openVideo(chapterId) {
         this.dialogVideoFormVisible = true;
         //清空表单
-        this.video={};
-        this.fileList=[];
+        this.video = {};
+        this.fileList = [];
         //设置章节id
         this.video.chapterId = chapterId;
       },
@@ -239,9 +243,9 @@
       },
 
       saveOrUpdateVideo() {
-        if(!this.video.id){
+        if (!this.video.id) {
           this.addVideo()
-        }else {
+        } else {
           this.updateVideo()
         }
 

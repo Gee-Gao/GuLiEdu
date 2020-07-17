@@ -3,9 +3,13 @@ package com.gee.vod.service.impl;
 import com.aliyun.vod.upload.impl.UploadVideoImpl;
 import com.aliyun.vod.upload.req.UploadStreamRequest;
 import com.aliyun.vod.upload.resp.UploadStreamResponse;
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.vod.model.v20170321.DeleteVideoRequest;
 import com.gee.servicebase.exceptionhandler.GuliException;
 import com.gee.vod.service.VodService;
 import com.gee.vod.utils.ConstantPropertiesUtil;
+import com.gee.vod.utils.InitVodClient;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +22,22 @@ import java.io.InputStream;
  */
 @Service
 public class VodServiceImpl implements VodService {
+    @Override
+    public void removeVideo(String id) {
+        try {
+            //初始化对象
+            DefaultAcsClient client = InitVodClient.initVodClient(ConstantPropertiesUtil.ACCESS_KEY_ID, ConstantPropertiesUtil.ACCESS_KEY_SECRET);
+            //创建删除的request对象
+            DeleteVideoRequest request = new DeleteVideoRequest();
+            //向request中设置要删除视频的id,若有多个，逗号分隔
+            request.setVideoIds(id);
+            //调用初始化对象的方法，实现删除
+            client.getAcsResponse(request);
+        } catch (ClientException e) {
+            throw new GuliException(20001,"删除云端视频失败");
+        }
+    }
+
     //视频上传到阿里云
     @Override
     public String uploadVideo(MultipartFile file) {

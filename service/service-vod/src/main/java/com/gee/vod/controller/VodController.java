@@ -3,10 +3,8 @@ package com.gee.vod.controller;
 import com.gee.commonutils.R;
 import com.gee.vod.service.VodService;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -27,5 +25,12 @@ public class VodController {
     public R uploadVideo(MultipartFile file){
         String videoId =  vodService.uploadVideo(file);
         return R.ok().data("videoId",videoId);
+    }
+
+    //根据视频id删除阿里云视频
+    @DeleteMapping("removeAiliVideo/{id}")
+    public R removeAiliVideo(@ApiParam("视频id") @PathVariable String id){
+        vodService.removeVideo(id);
+        return R.ok();
     }
 }
