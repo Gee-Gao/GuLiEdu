@@ -2,10 +2,12 @@ package com.gee.edu.controller;
 
 
 import com.gee.commonutils.R;
+import com.gee.edu.client.VodClient;
 import com.gee.edu.entity.Video;
 import com.gee.edu.service.VideoService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -24,6 +26,8 @@ import javax.annotation.Resource;
 public class VideoController {
     @Resource
     private VideoService videoService;
+    @Resource
+    private VodClient vodClient;
 
     //添加小节
     @ApiOperation("添加小节")
@@ -52,6 +56,16 @@ public class VideoController {
     @ApiOperation("删除小节")
     @DeleteMapping("{id}")
     public R deleteVideo(@ApiParam("小节id") @PathVariable String id) {
+        //根据小节id获取视频id
+        Video video = videoService.getById(id);
+        String videoSourceId = video.getVideoSourceId();
+
+        //删除阿里云视频
+        if (!StringUtils.isEmpty(videoSourceId)) {
+            vodClient.removeAiliVideo(videoSourceId);
+        }
+
+        //删除小节
         videoService.removeById(id);
         return R.ok();
     }
