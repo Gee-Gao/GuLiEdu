@@ -153,7 +153,17 @@
       },
       //点击确定删除
       handleVodRemove() {
-
+        video.deleteAliVideo(this.video.videoSourceId).then(() => {
+          //提示信息
+          this.$message({
+            type: 'success',
+            message: `删除成功`
+          });
+          //文件列表清空
+          this.fileList = [];
+          this.video.videoSourceId=''
+          this.video.videoOriginalName=''
+        });
       },
 
       //上传之前
