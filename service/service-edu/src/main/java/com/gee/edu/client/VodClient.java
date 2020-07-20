@@ -14,7 +14,7 @@ import java.util.List;
  * @author Gee
  */
 @Component
-@FeignClient("service-vod")
+@FeignClient(name = "service-vod", fallback = VodFileDegradeFeignClient.class)
 public interface VodClient {
     //定义调用方法的路径
     //根据视频id删除阿里云视频

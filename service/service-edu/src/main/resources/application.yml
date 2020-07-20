@@ -22,3 +22,7 @@ spring:
 #配置mapper xml文件的路径
 mybatis-plus:
   mapper-locations: classpath:com/gee/edu/mapper/xml/*.xml
+#开启熔断机制
+feign:
+  hystrix:
+    enabled: true

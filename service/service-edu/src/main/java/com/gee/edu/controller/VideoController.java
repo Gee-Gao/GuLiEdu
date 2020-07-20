@@ -5,6 +5,7 @@ import com.gee.commonutils.R;
 import com.gee.edu.client.VodClient;
 import com.gee.edu.entity.Video;
 import com.gee.edu.service.VideoService;
+import com.gee.servicebase.exceptionhandler.GuliException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.util.StringUtils;
@@ -62,7 +63,10 @@ public class VideoController {
 
         //删除阿里云视频
         if (!StringUtils.isEmpty(videoSourceId)) {
-            vodClient.removeAiliVideo(videoSourceId);
+            R result = vodClient.removeAiliVideo(videoSourceId);
+            if (result.getCode() == 20001) {
+                throw new GuliException(20001, "删除视频失败");
+            }
         }
 
         //删除小节
