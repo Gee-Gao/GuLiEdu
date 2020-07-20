@@ -16,12 +16,33 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * @author Gee
  */
 @Service
 public class VodServiceImpl implements VodService {
+    //根据视频id集合删除多个阿里云视频
+    @Override
+    public void removeMoreAliVideo(List<String> videoIdList) {
+        try {
+            //初始化对象
+            DefaultAcsClient client = InitVodClient.initVodClient(ConstantPropertiesUtil.ACCESS_KEY_ID, ConstantPropertiesUtil.ACCESS_KEY_SECRET);
+            //创建删除的request对象
+            DeleteVideoRequest request = new DeleteVideoRequest();
+            //向request中设置要删除视频的id,若有多个，逗号分隔
+            String videoIds = org.apache.commons.lang.StringUtils.join(videoIdList.toArray(), ",");
+
+            request.setVideoIds(videoIds);
+            //调用初始化对象的方法，实现删除
+            client.getAcsResponse(request);
+        } catch (ClientException e) {
+            throw new GuliException(20001,"删除云端视频失败");
+        }
+    }
+
+    //根据视频id删除阿里云视频
     @Override
     public void removeVideo(String id) {
         try {
@@ -69,4 +90,6 @@ public class VodServiceImpl implements VodService {
             throw new GuliException(20001, "guli vod 服务上传失败");
         }
     }
+
+
 }
