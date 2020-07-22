@@ -1,0 +1,19 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: service-cms
+  datasource:
+    hikari:
+      max-lifetime: 120000
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://39.96.8.119:3306/Edu?serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+mybatis-plus:
+  mapper-locations: classpath:com/gee/cms/mapper/xml/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
