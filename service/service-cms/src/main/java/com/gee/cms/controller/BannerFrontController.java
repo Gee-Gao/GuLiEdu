@@ -1,9 +1,16 @@
 package com.gee.cms.controller;
 
 
+import com.gee.cms.entity.CrmBanner;
+import com.gee.cms.service.CrmBannerService;
+import com.gee.commonutils.R;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -17,6 +24,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/educms/bannerfront")
 @CrossOrigin
 public class BannerFrontController {
+    @Resource
+    private CrmBannerService bannerService;
 
+    //查询banner
+    @ApiOperation("查询banner")
+    public R getAllBanner() {
+        List<CrmBanner> list = bannerService.selectAllBanner();
+        return R.ok().data("list", list);
+    }
 }
 
