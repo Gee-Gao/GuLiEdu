@@ -6,6 +6,7 @@ import com.gee.cms.service.CrmBannerService;
 import com.gee.commonutils.R;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +22,7 @@ import java.util.List;
  * @since 2020-07-22
  */
 @RestController
-@RequestMapping("/educms/bannerfront")
+@RequestMapping("educms/bannerfront")
 @CrossOrigin
 public class BannerFrontController {
     @Resource
@@ -29,9 +30,15 @@ public class BannerFrontController {
 
     //查询banner
     @ApiOperation("查询banner")
+    @RequestMapping("getAllBanner")
     public R getAllBanner() {
         List<CrmBanner> list = bannerService.selectAllBanner();
         return R.ok().data("list", list);
+    }
+
+    @GetMapping("A")
+    public String S(){
+        return "11";
     }
 }
 
