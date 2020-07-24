@@ -127,7 +127,7 @@ public class CourseController {
     public R publishCourse(@ApiParam("课程id") @PathVariable("id") String id) {
         Course course = new Course();
         course.setId(id);
-        course.setStatus("Normal");
+        course.setStatus("1");
         courseService.updateById(course);
         return R.ok();
     }
