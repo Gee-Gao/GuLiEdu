@@ -7,6 +7,7 @@ import com.gee.edu.entity.Teacher;
 import com.gee.edu.service.CourseService;
 import com.gee.edu.service.TeacherService;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ public class IndexFrontController {
     //查询前8条热门课程和前4条名师
     @ApiOperation("查询前8条热门课程和前4条名师")
     @GetMapping("index")
+    @Cacheable(value = "CourseAndTeacher" ,key = "'Hot'")
     public R index() {
         //查询前8条热门课程
         QueryWrapper<Course> wrapperCourse = new QueryWrapper<>();
