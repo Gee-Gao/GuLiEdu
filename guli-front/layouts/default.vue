@@ -164,6 +164,14 @@
           this.loginInfo = JSON.parse(jsonStr)
         }
       },
+      //退出
+      logout(){
+        //清空cookie值
+        cookie.set('guli_ucenter', "", {domain: 'localhost'})
+        cookie.set('guli_token', "", {domain: 'localhost'})
+        //跳转页面
+        window.location.href = "/"
+      }
     }
   };
 </script>
