@@ -18,6 +18,7 @@
         <module>service-cms</module>
         <module>service-msg</module>
         <module>service-user</module>
+        <module>service-wx</module>
     </modules>
 
     <dependencies>

@@ -7,6 +7,7 @@ import com.gee.servicebase.exceptionhandler.GuliException;
 import com.gee.user.entity.UcenterMember;
 import com.gee.user.entity.vo.RegisterVo;
 import com.gee.user.service.UcenterMemberService;
+import com.google.gson.Gson;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +56,30 @@ public class UcenterMemberController {
         String memberId = JwtUtils.getMemberIdByJwtToken(request);
         UcenterMember member = memberService.getById(memberId);
         return R.ok().data("item", member);
+    }
+
+    //根据openId获取UcenterMember对象
+    @ApiOperation("根据OpenId获取UcenterMember对象")
+    @PostMapping("getOpenIdMember")
+    public R getOpenIdMember(@RequestBody UcenterMember ucenterMember) {
+        //获取数据
+        String openid = ucenterMember.getOpenid();
+        String avatar = ucenterMember.getAvatar();
+        String nickname = ucenterMember.getNickname();
+        //查看数据库当前账号是否被注册
+        UcenterMember member = memberService.getOpenIdMember(openid, avatar, nickname);
+        //把 UcenterMember对象转换为json返回
+        Gson gson = new Gson();
+        String memberJson = gson.toJson(member);
+        return R.ok().message(memberJson);
+    }
+
+    //微信注册
+    @ApiOperation("微信注册")
+    @PostMapping("registerWx")
+    public R registerWx(@RequestBody UcenterMember member) {
+        memberService.save(member);
+        return R.ok();
     }
 }
 

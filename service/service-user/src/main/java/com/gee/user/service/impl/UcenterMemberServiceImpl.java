@@ -60,6 +60,35 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
         return token;
     }
 
+    @Override
+    public UcenterMember getOpenIdMember(String openid, String avatar, String nickname) {
+        //通过openid 查询数据库是否存在相同账号
+        QueryWrapper<UcenterMember> wrapper = new QueryWrapper<>();
+        wrapper.eq("openid", openid);
+        UcenterMember member = baseMapper.selectOne(wrapper);
+        //如果数据库中存在
+        if (member != null) {
+            //定义变量，判断当前登陆账号信息是否发生修改
+            boolean flag = false;
+            //判断头像是否修改
+            if (!member.getAvatar().equals(avatar)) {
+                member.setAvatar(avatar);
+                flag = true;
+            }
+            //判断昵称是否修改
+            if (!member.getNickname().equals(nickname)) {
+                member.setNickname(nickname);
+                flag = true;
+            }
+            //如果有任何一项修改过，更新数据库内容，并重新查询
+            if (flag) {
+                baseMapper.updateById(member);
+                member = baseMapper.selectOne(wrapper);
+            }
+        }
+        return member;
+    }
+
     //注册
     @Override
     public void register(RegisterVo registerVo) {
