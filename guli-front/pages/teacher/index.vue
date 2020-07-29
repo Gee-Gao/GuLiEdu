@@ -8,9 +8,6 @@
         </h2>
         <section class="c-tab-title">
           <a id="subjectAll" title="全部" href="#">全部</a>
-          <!-- <c:forEach var="subject" items="${subjectList }">
-                            <a id="${subject.subjectId}" title="${subject.subjectName }" href="javascript:void(0)" onclick="submitForm(${subject.subjectId})">${subject.subjectName }</a>
-          </c:forEach>-->
         </section>
       </header>
       <section class="c-sort-box unBr">
@@ -26,12 +23,12 @@
               <li v-for=" teacher in data.items" :key="teacher.id">
                 <section class="i-teach-wrap">
                   <div class="i-teach-pic">
-                    <a href="/teacher/1" :title="teacher.name" target="_blank">
+                    <a :href="'/teacher/'+teacher.id" :title="teacher.name">
                       <img :src="teacher.avatar" :alt="teacher.name">
                     </a>
                   </div>
                   <div class="mt10 hLh30 txtOf tac">
-                    <a href="/teacher/1" :title="teacher.name" target="_blank"
+                    <a :href="'/teacher/'+teacher.id" :title="teacher.name"
                        class="fsize18 c-666">{{teacher.name}}</a>
                   </div>
                   <div class="hLh30 txtOf tac">

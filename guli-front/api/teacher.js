@@ -7,4 +7,11 @@ export default {
       method: 'post',
     })
   },
+  //讲师详情
+  getTeacherInfo(id){
+    return request({
+      url: `/eduservice/teacherfront/getTeacherFrontInfo/${id}`,
+      method: 'get',
+    })
+  }
 }
