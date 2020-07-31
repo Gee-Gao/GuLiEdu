@@ -1,8 +1,11 @@
 package com.gee.edu.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gee.edu.entity.Course;
 import com.gee.edu.entity.CourseDescription;
+import com.gee.edu.entity.vo.CourseFrontVo;
 import com.gee.edu.entity.vo.CourseInfoVo;
 import com.gee.edu.entity.vo.CoursePublishVo;
 import com.gee.edu.mapper.CourseMapper;
@@ -13,8 +16,12 @@ import com.gee.edu.service.VideoService;
 import com.gee.servicebase.exceptionhandler.GuliException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -73,6 +80,53 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         }
     }
 
+    //条件分页查询课程
+    @Override
+    public Map<String, Object> getFrontCourseList(Page<Course> coursePage, CourseFrontVo courseFrontVo) {
+        QueryWrapper<Course> wrapper = new QueryWrapper<>();
+        //判断条件值是否为空
+        if (!StringUtils.isEmpty(courseFrontVo.getSubjectParentId())) {//一级分类
+            wrapper.eq("subject_parent_id", courseFrontVo.getSubjectParentId());
+        }
+
+        if (!StringUtils.isEmpty(courseFrontVo.getSubjectId())) {//二级分类
+            wrapper.eq("subject_id", courseFrontVo.getSubjectId());
+        }
+
+        if (!StringUtils.isEmpty(courseFrontVo.getBuyCountSort())) {//销量
+            wrapper.orderByDesc("buy_count");
+        }
+
+        if (!StringUtils.isEmpty(courseFrontVo.getGmtCreateSort())) {//创建时间
+            wrapper.orderByDesc("gmt_create");
+        }
+
+        if (!StringUtils.isEmpty(courseFrontVo.getPriceSort())) {//价钱
+            wrapper.orderByDesc("price");
+        }
+        //分页查询
+        baseMapper.selectPage(coursePage, wrapper);
+
+        //把分页数据取出并放到map中
+        List<Course> records = coursePage.getRecords();
+        long current = coursePage.getCurrent();
+        long pages = coursePage.getPages();
+        long size = coursePage.getSize();
+        long total = coursePage.getTotal();
+        boolean hasNext = coursePage.hasNext();
+        boolean hasPrevious = coursePage.hasPrevious();
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("items", records);
+        map.put("current", current);
+        map.put("pages", pages);
+        map.put("size", size);
+        map.put("total", total);
+        map.put("hasNext", hasNext);
+        map.put("hasPrevious", hasPrevious);
+        return map;
+    }
+
     //根据课程id查询课程确认信息
     @Override
     public CoursePublishVo publishCourseInfo(String id) {
@@ -108,6 +162,5 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         CourseDescription courseDescription = new CourseDescription();
         BeanUtils.copyProperties(courseInfoVo, courseDescription);
         courseDescriptionService.updateById(courseDescription);
-
     }
 }
