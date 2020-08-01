@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.gee.edu.entity.vo.CourseFrontVo;
 import com.gee.edu.entity.vo.CourseInfoVo;
 import com.gee.edu.entity.vo.CoursePublishVo;
+import com.gee.edu.entity.vo.CourseWebVo;
 
 import java.util.Map;
 
@@ -30,4 +31,6 @@ public interface CourseService extends IService<Course> {
     void removeCourse(String courseId);
 
     Map<String, Object> getFrontCourseList(Page<Course> coursePage, CourseFrontVo courseFrontVo);
+
+    CourseWebVo getBaseCourseInfo(String courseId);
 }

@@ -8,6 +8,7 @@ import com.gee.edu.entity.CourseDescription;
 import com.gee.edu.entity.vo.CourseFrontVo;
 import com.gee.edu.entity.vo.CourseInfoVo;
 import com.gee.edu.entity.vo.CoursePublishVo;
+import com.gee.edu.entity.vo.CourseWebVo;
 import com.gee.edu.mapper.CourseMapper;
 import com.gee.edu.service.ChapterService;
 import com.gee.edu.service.CourseDescriptionService;
@@ -145,6 +146,12 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         CourseDescription courseDescription = courseDescriptionService.getById(courseId);
         BeanUtils.copyProperties(courseDescription, courseInfoVo);
         return courseInfoVo;
+    }
+
+    //课程详情
+    @Override
+    public CourseWebVo getBaseCourseInfo(String courseId) {
+        return baseMapper.getBaseCourseInfo(courseId);
     }
 
     //修改课程信息
