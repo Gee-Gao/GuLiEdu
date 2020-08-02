@@ -9,6 +9,7 @@ import com.gee.user.entity.vo.RegisterVo;
 import com.gee.user.service.UcenterMemberService;
 import com.google.gson.Gson;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -24,6 +25,14 @@ import javax.servlet.http.HttpServletRequest;
 public class UcenterMemberController {
     @Resource
     private UcenterMemberService memberService;
+
+    //根据id查询用户
+    @GetMapping("getUserInfoComment/{id}")
+    public R getUserInfoComment(@ApiParam("用户id") @PathVariable String id) {
+        UcenterMember member = memberService.getById(id);
+        return R.ok().data("member", member);
+    }
+
 
     //登录
     @ApiOperation(value = "登录")
