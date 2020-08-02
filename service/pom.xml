@@ -19,6 +19,7 @@
         <module>service-msg</module>
         <module>service-user</module>
         <module>service-wx</module>
+        <module>service-order</module>
     </modules>
 
     <dependencies>
