@@ -132,62 +132,69 @@
   </div>
 </template>
 <script>
-  import "~/assets/css/reset.css";
-  import "~/assets/css/theme.css";
-  import "~/assets/css/global.css";
-  import "~/assets/css/web.css";
-  import cookie from 'js-cookie'
-  import login from "../api/login";
+import '~/assets/css/reset.css'
+import '~/assets/css/theme.css'
+import '~/assets/css/global.css'
+import '~/assets/css/web.css'
+import '~/assets/css/base.css'
+import '~/assets/css/activity_tab.css'
+import '~/assets/css/bottom_rec.css'
+import '~/assets/css/nice_select.css'
+import '~/assets/css/order.css'
+import '~/assets/css/swiper-3.3.1.min.css'
+import "~/assets/css/pages-weixinpay.css"
+import cookie from 'js-cookie'
+import login from "../api/login";
 
-  export default {
-    data() {
-      return {
-        token: '',
-        loginInfo: {
-          id: '',
-          age: '',
-          avatar: '',
-          mobile: '',
-          nickname: '',
-          sex: ''
-        }
-      }
-    },
-    created() {
-      this.token = this.$route.query.token;
-      if (this.token) {
-        this.wxLogin();
-      } else {
-        this.showInfo()
-      }
-
-    },
-    methods: {
-      wxLogin() {
-        //把token设置到cookie
-        cookie.set("guli_token", this.token, {domain: "localhost"});
-        cookie.set('guli_ucenter', "", {domain: 'localhost'})
-        //调用接口，获取到登陆用户信息
-        login.getLoginInfo().then(response => {
-          this.loginInfo = response.data.data.item;
-          cookie.set('guli_ucenter', this.loginInfo, {domain: 'localhost'})
-        })
-
-      },
-      showInfo() {
-        let jsonStr = cookie.get("guli_ucenter");
-        if (jsonStr) {
-          this.loginInfo = JSON.parse(jsonStr)
-        }
-      },
-      //退出
-      logout() {
-        //清空cookie值
-        cookie.set('guli_ucenter', "", {domain: 'localhost'})
-        cookie.set('guli_token', "", {domain: 'localhost'})
-        //跳转页面
-        window.location.href = "/"
+export default {
+  data() {
+    return {
+      token: '',
+      loginInfo: {
+        id: '',
+        age: '',
+        avatar: '',
+        mobile: '',
+        nickname: '',
+        sex: ''
       }
     }
-  };
+  },
+  created() {
+    this.token = this.$route.query.token;
+    if (this.token) {
+      this.wxLogin();
+    } else {
+      this.showInfo()
+    }
+
+  },
+  methods: {
+    wxLogin() {
+      //把token设置到cookie
+      cookie.set("guli_token", this.token, {domain: "localhost"});
+      cookie.set('guli_ucenter', "", {domain: 'localhost'})
+      //调用接口，获取到登陆用户信息
+      login.getLoginInfo().then(response => {
+        this.loginInfo = response.data.data.item;
+        cookie.set('guli_ucenter', this.loginInfo, {domain: 'localhost'})
+      })
+
+    },
+    showInfo() {
+      let jsonStr = cookie.get("guli_ucenter");
+      if (jsonStr) {
+        this.loginInfo = JSON.parse(jsonStr)
+      }
+    },
+    //退出
+    logout() {
+      //清空cookie值
+      cookie.set('guli_ucenter', "", {domain: 'localhost'})
+      cookie.set('guli_token', "", {domain: 'localhost'})
+      //跳转页面
+      window.location.href = "/"
+    }
+  }
+};
 </script>

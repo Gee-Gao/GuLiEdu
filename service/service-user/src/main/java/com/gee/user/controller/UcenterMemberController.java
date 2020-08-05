@@ -3,6 +3,7 @@ package com.gee.user.controller;
 
 import com.gee.commonutils.JwtUtils;
 import com.gee.commonutils.R;
+import com.gee.commonutils.vo.UcenterMemberOrderVo;
 import com.gee.servicebase.exceptionhandler.GuliException;
 import com.gee.user.entity.UcenterMember;
 import com.gee.user.entity.vo.RegisterVo;
@@ -10,6 +11,7 @@ import com.gee.user.service.UcenterMemberService;
 import com.google.gson.Gson;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -25,6 +27,17 @@ import javax.servlet.http.HttpServletRequest;
 public class UcenterMemberController {
     @Resource
     private UcenterMemberService memberService;
+
+    //根据id返回用户信息
+    @PostMapping("getUserInfoOrder/{id}")
+    public UcenterMemberOrderVo getUserInfoOrder(@ApiParam("用户id") @PathVariable String id) {
+        UcenterMember member = memberService.getById(id);
+        //把member对象的值赋值给ucenterMemberOrderVo
+        UcenterMemberOrderVo ucenterMemberOrderVo = new UcenterMemberOrderVo();
+        BeanUtils.copyProperties(member, ucenterMemberOrderVo);
+        return ucenterMemberOrderVo;
+    }
+
 
     //根据id查询用户
     @GetMapping("getUserInfoComment/{id}")

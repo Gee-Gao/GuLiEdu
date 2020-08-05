@@ -39,8 +39,12 @@
                     <a class="c-fff vam" title="收藏" href="#">收藏</a>
                 </span>
             </section>
-            <section class="c-attr-mt">
+
+            <section class="c-attr-mt" v-if="Number(course.price) == 0 || isBuy">
               <a href="#" title="立即观看" class="comm-btn c-btn-3">立即观看</a>
+            </section>
+            <section class="c-attr-mt" v-else>
+              <a @click="createOrder()" href="#" title="立即购买" class="comm-btn c-btn-3">立即购买</a>
             </section>
           </section>
         </aside>
@@ -171,89 +175,90 @@
     </section>
     <!-- /课程详情 结束 -->
 
-    <div class="mt50 commentHtml"><div>
-      <h6 class="c-c-content c-infor-title" id="i-art-comment">
-        <span class="commentTitle">课程评论</span>
-      </h6>
-      <section class="lh-bj-list pr mt20 replyhtml">
-        <ul>
-          <li class="unBr">
-            <aside class="noter-pic">
-              <img width="50" height="50" class="picImg" src="~/assets/img/avatar-boy.gif">
-            </aside>
-            <div class="of">
-              <section class="n-reply-wrap">
-                <fieldset>
-                  <textarea name="" v-model="comment.content" placeholder="输入您要评论的文字" id="commentContent"></textarea>
-                </fieldset>
-                <p class="of mt5 tar pl10 pr10">
-                  <span class="fl "><tt class="c-red commentContentmeg" style="display: none;"></tt></span>
-                  <input type="button" @click="addComment()" value="回复" class="lh-reply-btn">
-                </p>
-              </section>
-            </div>
-          </li>
-        </ul>
-      </section>
-      <section class="">
-        <section class="question-list lh-bj-list pr">
-          <ul class="pr10">
-            <li v-for="(comment,index) in data.items" v-bind:key="index">
+    <div class="mt50 commentHtml">
+      <div>
+        <h6 class="c-c-content c-infor-title" id="i-art-comment">
+          <span class="commentTitle">课程评论</span>
+        </h6>
+        <section class="lh-bj-list pr mt20 replyhtml">
+          <ul>
+            <li class="unBr">
               <aside class="noter-pic">
-                <img width="50" height="50" class="picImg" :src="comment.avatar">
+                <img width="50" height="50" class="picImg" src="~/assets/img/avatar-boy.gif">
               </aside>
               <div class="of">
-                    <span class="fl">
-                    <font class="fsize12 c-blue">
-                      {{comment.nickname}}</font>
-                    <font class="fsize12 c-999 ml5">评论：</font></span>
-              </div>
-              <div class="noter-txt mt5">
-                <p>{{comment.content}}</p>
-              </div>
-              <div class="of mt5">
-                <span class="fr"><font class="fsize12 c-999 ml5">{{comment.gmtCreate}}</font></span>
+                <section class="n-reply-wrap">
+                  <fieldset>
+                    <textarea name="" v-model="comment.content" placeholder="输入您要评论的文字" id="commentContent"></textarea>
+                  </fieldset>
+                  <p class="of mt5 tar pl10 pr10">
+                    <span class="fl "><tt class="c-red commentContentmeg" style="display: none;"></tt></span>
+                    <input type="button" @click="addComment()" value="回复" class="lh-reply-btn">
+                  </p>
+                </section>
               </div>
             </li>
-
           </ul>
         </section>
-      </section>
+        <section class="">
+          <section class="question-list lh-bj-list pr">
+            <ul class="pr10">
+              <li v-for="(comment,index) in data.items" v-bind:key="index">
+                <aside class="noter-pic">
+                  <img width="50" height="50" class="picImg" :src="comment.avatar">
+                </aside>
+                <div class="of">
+                    <span class="fl">
+                    <font class="fsize12 c-blue">
+                      {{ comment.nickname }}</font>
+                    <font class="fsize12 c-999 ml5">评论：</font></span>
+                </div>
+                <div class="noter-txt mt5">
+                  <p>{{ comment.content }}</p>
+                </div>
+                <div class="of mt5">
+                  <span class="fr"><font class="fsize12 c-999 ml5">{{ comment.gmtCreate }}</font></span>
+                </div>
+              </li>
 
-      <!-- 公共分页 开始 -->
-      <div class="paging">
-        <!-- undisable这个class是否存在，取决于数据属性hasPrevious -->
-        <a
-          :class="{undisable: !data.hasPrevious}"
-          href="#"
-          title="首页"
-          @click.prevent="gotoPage(1)">首</a>
-        <a
-          :class="{undisable: !data.hasPrevious}"
-          href="#"
-          title="前一页"
-          @click.prevent="gotoPage(data.current-1)">&lt;</a>
-        <a
-          v-for="page in data.pages"
-          :key="page"
-          :class="{current: data.current == page, undisable: data.current == page}"
-          :title="'第'+page+'页'"
-          href="#"
-          @click.prevent="gotoPage(page)">{{ page }}</a>
-        <a
-          :class="{undisable: !data.hasNext}"
-          href="#"
-          title="后一页"
-          @click.prevent="gotoPage(data.current+1)">&gt;</a>
-        <a
-          :class="{undisable: !data.hasNext}"
-          href="#"
-          title="末页"
-          @click.prevent="gotoPage(data.pages)">末</a>
-        <div class="clear"/>
+            </ul>
+          </section>
+        </section>
+
+        <!-- 公共分页 开始 -->
+        <div class="paging">
+          <!-- undisable这个class是否存在，取决于数据属性hasPrevious -->
+          <a
+            :class="{undisable: !data.hasPrevious}"
+            href="#"
+            title="首页"
+            @click.prevent="gotoPage(1)">首</a>
+          <a
+            :class="{undisable: !data.hasPrevious}"
+            href="#"
+            title="前一页"
+            @click.prevent="gotoPage(data.current-1)">&lt;</a>
+          <a
+            v-for="page in data.pages"
+            :key="page"
+            :class="{current: data.current == page, undisable: data.current == page}"
+            :title="'第'+page+'页'"
+            href="#"
+            @click.prevent="gotoPage(page)">{{ page }}</a>
+          <a
+            :class="{undisable: !data.hasNext}"
+            href="#"
+            title="后一页"
+            @click.prevent="gotoPage(data.current+1)">&gt;</a>
+          <a
+            :class="{undisable: !data.hasNext}"
+            href="#"
+            title="末页"
+            @click.prevent="gotoPage(data.pages)">末</a>
+          <div class="clear"/>
+        </div>
+        <!-- 公共分页 结束 -->
       </div>
-      <!-- 公共分页 结束 -->
-    </div>
     </div>
 
   </div>
@@ -262,52 +267,69 @@
 <script>
 import courseApi from "../../api/course";
 import comment from '@/api/commonedu';
+import orders from "../../api/orders";
+
 export default {
-  asyncData({params}) {
-    return courseApi.getCourseInfo(params.id).then(response => {
-      return {
-        course: response.data.data.course,
-        chapterVideoList: response.data.data.chapterVideoList,
-        courseId: params.id
-      }
-    })
-  },
   data() {
     return {
-      data:{},
-      page:1,
-      limit:4,
-      total:10,
-      comment:{
-        content:'',
-        courseId:''
+      data: {},
+      page: 1,
+      limit: 4,
+      total: 10,
+      comment: {
+        content: '',
+        courseId: ''
       },
-      courseInfo:{},
-      chapterVideoList:[],
-      isbuyCourse:false
+      teacherId: '',
+      courseId: '',
+      course: {},
+      chapterVideoList: [],
+      isBuy: false,
     }
   },
   created() {
-    this.initComment()
+    this.courseId = this.$route.params.id;
+    this.initComment();
+    this.initCourseInfo();
   },
-  methods:{
-    initComment(){
+  methods: {
+    initCourseInfo() {
+      courseApi.getCourseInfo(this.courseId).then(response => {
+        this.course = response.data.data.course;
+        this.teacherId=response.data.data.course.teacherId;
+        this.chapterVideoList = response.data.data.chapterVideoList;
+        this.isBuy = response.data.data.isBuy;
+      })
+    },
+
+    createOrder() {
+      orders.createOrder(this.courseId).then(response => {
+        if (response.data.success) {
+          //跳转订单显示页面
+          this.$router.push({path: '/order/' + response.data.data.orderNo})
+        }
+      })
+    },
+    initComment() {
       comment.getPageList(this.page, this.limit, this.courseId).then(response => {
         this.data = response.data.data
       })
     },
-    addComment(){
+    addComment() {
       this.comment.courseId = this.courseId
-      this.comment.teacherId = this.courseInfo.teacherId
+      this.comment.teacherId = this.teacherId
       comment.addComment(this.comment).then(response => {
-        if(response.data.success){
+        if (response.data.success) {
           this.comment.content = ''
           this.initComment()
         }
       })
     },
-    gotoPage(page){
-      comment.getPageList(page, this.limit,this.courseId).then(response => {
+    gotoPage(page) {
+      comment.getPageList(page, this.limit, this.courseId).then(response => {
+        if (page >= this.data.pages) {
+          page = this.data.pages;
+        }
         this.data = response.data.data
       })
     }
