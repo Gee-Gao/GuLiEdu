@@ -61,6 +61,7 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
     }
 
     @Override
+    //根据openId查询用户
     public UcenterMember getOpenIdMember(String openid, String avatar, String nickname) {
         //通过openid 查询数据库是否存在相同账号
         QueryWrapper<UcenterMember> wrapper = new QueryWrapper<>();
@@ -87,6 +88,12 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
             }
         }
         return member;
+    }
+
+    ////查询某一天注册人数
+    @Override
+    public int countRegister(String day) {
+        return baseMapper.countRegister(day);
     }
 
     //注册

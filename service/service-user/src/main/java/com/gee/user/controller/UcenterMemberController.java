@@ -28,7 +28,15 @@ public class UcenterMemberController {
     @Resource
     private UcenterMemberService memberService;
 
+    @ApiOperation("查询某一天注册人数")
+    @GetMapping("countRegister/{day}")
+    public R countRegister(@ApiParam("日期") @PathVariable String day) {
+        int conut = memberService.countRegister(day);
+        return R.ok().data("countRegister", conut);
+    }
+
     //根据id返回用户信息
+    @ApiOperation("根据id返回用户信息")
     @PostMapping("getUserInfoOrder/{id}")
     public UcenterMemberOrderVo getUserInfoOrder(@ApiParam("用户id") @PathVariable String id) {
         UcenterMember member = memberService.getById(id);
@@ -40,6 +48,7 @@ public class UcenterMemberController {
 
 
     //根据id查询用户
+    @ApiOperation("根据id查询用户")
     @GetMapping("getUserInfoComment/{id}")
     public R getUserInfoComment(@ApiParam("用户id") @PathVariable String id) {
         UcenterMember member = memberService.getById(id);
