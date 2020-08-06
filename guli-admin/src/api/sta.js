@@ -8,4 +8,11 @@ export default {
       method: 'get'
     })
   },
+  //获取统计数据
+  getDataSta(searchObj){
+    return request({
+      url: `/edusta/sta/showData/${searchObj.type}/${searchObj.begin}/${searchObj.end}`,
+      method: 'get'
+    })
+  }
 }
