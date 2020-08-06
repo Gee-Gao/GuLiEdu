@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * <p>
@@ -32,5 +33,14 @@ public class StatisticsDailyController {
         return R.ok();
     }
 
+    //图表显示
+    @ApiOperation("图表显示")
+    @GetMapping("showData/{type}/{begin}/{end}")
+    public R showData(@ApiParam("查询类型") @PathVariable String type,
+                      @ApiParam("开始时间") @PathVariable String begin,
+                      @ApiParam("结束时间") @PathVariable String end) {
+        Map<String, Object> map = statisticsDailyService.showData(type, begin, end);
+        return R.ok().data(map);
+    }
 }
 
