@@ -1,0 +1,45 @@
+server:
+  port: 10086
+spring:
+  application:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: service-edu
+          uri: lb://service-edu
+          predicates:
+            - Path=/eduservice/**
+        - id: service-oss
+          uri: lb://service-oss
+          predicates:
+            - Path=/eduoss/**
+        - id: service-vod
+          uri: lb://service-vod
+          predicates:
+            - Path=/eduvod/**
+        - id: service-cms
+          uri: lb://service-cms
+          predicates:
+            - Path=/educms/**
+        - id: service-msg
+          uri: lb://service-msg
+          predicates:
+            - Path=/edumsg/**
+        - id: service-user
+          uri: lb://service-user
+          predicates:
+            - Path=/eduuser/**
+        - id: service-order
+          uri: lb://service-order
+          predicates:
+            - Path=/eduorder/**
+        - id: service-sta
+          uri: lb://service-sta
+          predicates:
+            - Path=/edusta/**
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
