@@ -16,6 +16,7 @@
             <groupId>com.gee</groupId>
             <artifactId>common-utils</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
