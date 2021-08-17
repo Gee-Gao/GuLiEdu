@@ -7,7 +7,7 @@ spring:
     hikari:
       max-lifetime: 120000
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://39.96.8.119:3306/Edu?serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/Edu?serverTimezone=Asia/Shanghai
     username: root
     password: 123456
   jackson:
