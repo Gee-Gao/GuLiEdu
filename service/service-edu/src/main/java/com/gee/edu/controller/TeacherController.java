@@ -9,6 +9,7 @@ import com.gee.edu.entity.vo.TeacherQuery;
 import com.gee.edu.service.TeacherService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/eduservice/teacher")
 @CrossOrigin
+@Slf4j
 public class TeacherController {
 
     @Resource
@@ -36,6 +38,7 @@ public class TeacherController {
     @GetMapping("findAll")
     public R findAllTeacher() {
         List<Teacher> list = teacherService.list(null);
+        log.info("讲师列表" + list);
         return R.ok().data("items", list);
     }
 
@@ -43,6 +46,7 @@ public class TeacherController {
     @ApiOperation(value = "根据ID逻辑删除讲师")
     @DeleteMapping("{id}")
     public R removeTeacher(@ApiParam(name = "id", value = "讲师ID", required = true) @PathVariable String id) {
+        log.info("讲师id" + id);
         boolean flag = teacherService.removeById(id);
         if (flag) {
             return R.ok();
@@ -124,6 +128,7 @@ public class TeacherController {
     @ApiOperation("添加讲师")
     @PostMapping("addTeacher")
     public R addTeacher(@ApiParam(name = "teacher", value = "添加对象") @RequestBody Teacher teacher) {
+        log.info("讲师信息" + teacher);
         boolean save = teacherService.save(teacher);
         //返回添加结果
         if (save) {
@@ -137,6 +142,7 @@ public class TeacherController {
     @ApiOperation("根据id查询讲师")
     @GetMapping("getTeacher/{id}")
     public R getTeacher(@ApiParam(name = "id", value = "讲师id") @PathVariable String id) {
+        log.info("讲师id" + id);
         Teacher teacher = teacherService.getById(id);
         return R.ok().data("teacher", teacher);
     }
@@ -145,6 +151,7 @@ public class TeacherController {
     @ApiOperation("修改讲师")
     @PostMapping("updateTeacher")
     public R updateTeacher(@ApiParam(name = "teacher", value = "被修改讲师") @RequestBody Teacher teacher) {
+        log.info("讲师信息" + teacher);
         boolean flag = teacherService.updateById(teacher);
         //返回修改结果
         if (flag) {

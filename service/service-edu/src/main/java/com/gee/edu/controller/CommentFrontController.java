@@ -9,6 +9,7 @@ import com.gee.edu.entity.Comment;
 import com.gee.edu.service.CommentService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/eduservice/comment")
 @CrossOrigin
+@Slf4j
 public class CommentFrontController {
     @Resource
     private CommentService commentService;
@@ -34,7 +36,7 @@ public class CommentFrontController {
             @ApiParam(name = "page", value = "当前页码", required = true) @PathVariable Long page,
             @ApiParam(name = "limit", value = "每页记录数", required = true) @PathVariable Long limit,
             @ApiParam(name = "courseQuery", value = "查询对象") String courseId) {
-
+        log.info("课程id" + courseId);
         //分页查询
         Page<Comment> pageParam = new Page<>(page, limit);
         QueryWrapper<Comment> wrapper = new QueryWrapper<>();
@@ -59,9 +61,10 @@ public class CommentFrontController {
     @ApiOperation(value = "添加评论")
     @PostMapping("auth/save")
     public R save(@RequestBody Comment comment, HttpServletRequest request) {
+        log.info("评论内容" + comment);
         //通过token 获取用户id
         String memberId = JwtUtils.getMemberIdByJwtToken(request);
-
+        log.info("用户id" + memberId);
         //如果token不存在，让用户进行登录
         if (StringUtils.isEmpty(memberId)) {
             return R.error().code(28004).message("请登录");
