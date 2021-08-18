@@ -1,6 +1,6 @@
 package com.gee.edu.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gee.edu.entity.Chapter;
 import com.gee.edu.entity.Video;
@@ -34,23 +34,23 @@ public class ChapterServiceImpl extends ServiceImpl<ChapterMapper, Chapter> impl
     @Override
     public List<ChapterVo> etChapterVideoByCourseId(String courseId) {
         //根据id查询课程所有章节
-        QueryWrapper<Chapter> wrapperChapter = new QueryWrapper<>();
-        wrapperChapter.eq("course_id", courseId);
+        LambdaQueryWrapper<Chapter> wrapperChapter = new LambdaQueryWrapper<>();
+        wrapperChapter.eq(Chapter::getCourseId, courseId);
         List<Chapter> chapters = baseMapper.selectList(wrapperChapter);
 
         //根据id查询课程所有小节
-        QueryWrapper<Video> wrapperVideo = new QueryWrapper<>();
-        wrapperChapter.eq("course_id", courseId);
+        LambdaQueryWrapper<Video> wrapperVideo = new LambdaQueryWrapper<>();
+        wrapperVideo.eq(Video::getCourseId, courseId);
         List<Video> videos = videoService.list(wrapperVideo);
 
         //创建集合，用于封装最终数据
-        List<ChapterVo> finallList = new ArrayList<>();
+        List<ChapterVo> finalList = new ArrayList<>();
 
         //遍历查询章节list进行封装
         for (Chapter chapter : chapters) {
             ChapterVo chapterVo = new ChapterVo();
             BeanUtils.copyProperties(chapter, chapterVo);
-            finallList.add(chapterVo);
+            finalList.add(chapterVo);
 
             //创建集合，用于封装小节
             List<VideoVo> videoList = new ArrayList<>();
@@ -68,15 +68,15 @@ public class ChapterServiceImpl extends ServiceImpl<ChapterMapper, Chapter> impl
             chapterVo.setChildren(videoList);
         }
 
-        return finallList;
+        return finalList;
     }
 
     @Override
     //删除章节
     public boolean deleteChapter(String chapterId) {
         //根据chapterId章节id,查询小节表，如果能查出数据，不进行删除
-        QueryWrapper<Video> wrapper = new QueryWrapper<>();
-        wrapper.eq("chapter_id", chapterId);
+        LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Video::getChapterId, chapterId);
         int count = videoService.count(wrapper);
 
         //查询出小节不进行删除
@@ -92,8 +92,8 @@ public class ChapterServiceImpl extends ServiceImpl<ChapterMapper, Chapter> impl
     //根据课程id删除章节
     @Override
     public void removeChapterByCourseId(String courseId) {
-        QueryWrapper<Chapter> wrapper = new QueryWrapper<>();
-        wrapper.eq("course_id", courseId);
+        LambdaQueryWrapper<Chapter> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Chapter::getCourseId, courseId);
         baseMapper.delete(wrapper);
     }
 }
