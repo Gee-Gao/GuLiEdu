@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/eduuser/member")
 @CrossOrigin
+@Slf4j
 public class UcenterMemberController {
     @Resource
     private UcenterMemberService memberService;
@@ -31,8 +32,9 @@ public class UcenterMemberController {
     @ApiOperation("查询某一天注册人数")
     @GetMapping("countRegister/{day}")
     public R countRegister(@ApiParam("日期") @PathVariable String day) {
-        int conut = memberService.countRegister(day);
-        return R.ok().data("countRegister", conut);
+        int count = memberService.countRegister(day);
+        log.info(day + "注册人数" + count);
+        return R.ok().data("countRegister", count);
     }
 
     //根据id返回用户信息
@@ -43,6 +45,7 @@ public class UcenterMemberController {
         //把member对象的值赋值给ucenterMemberOrderVo
         UcenterMemberOrderVo ucenterMemberOrderVo = new UcenterMemberOrderVo();
         BeanUtils.copyProperties(member, ucenterMemberOrderVo);
+        log.info("用户信息" + ucenterMemberOrderVo);
         return ucenterMemberOrderVo;
     }
 
@@ -52,6 +55,7 @@ public class UcenterMemberController {
     @GetMapping("getUserInfoComment/{id}")
     public R getUserInfoComment(@ApiParam("用户id") @PathVariable String id) {
         UcenterMember member = memberService.getById(id);
+        log.info("用户信息" + member);
         return R.ok().data("member", member);
     }
 
@@ -62,6 +66,7 @@ public class UcenterMemberController {
     public R login(@RequestBody UcenterMember ucenterMember) {
         try {
             String token = memberService.login(ucenterMember);
+            log.info("token" + token);
             return R.ok().data("token", token);
         } catch (GuliException e) {
             return R.error().message(e.getMsg());
@@ -76,6 +81,7 @@ public class UcenterMemberController {
             memberService.register(registerVo);
             return R.ok();
         } catch (GuliException e) {
+            log.error("注册失败");
             return R.error().message(e.getMsg());
         }
     }
