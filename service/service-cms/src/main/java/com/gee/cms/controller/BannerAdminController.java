@@ -7,6 +7,7 @@ import com.gee.cms.service.CrmBannerService;
 import com.gee.commonutils.R;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -22,6 +23,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/educms/banneradmin")
 @CrossOrigin
+@Slf4j
 public class BannerAdminController {
     @Resource
     private CrmBannerService crmBannerService;
@@ -30,8 +32,9 @@ public class BannerAdminController {
     @ApiOperation("分页查询banner")
     @GetMapping("pageBanner/{page}/{limit}")
     public R pageBanner(@ApiParam("当前页数") @PathVariable Long page, @ApiParam("每页记录数") @PathVariable Long limit) {
-        Page<CrmBanner> bannerPage = new Page<>(page,limit);
+        Page<CrmBanner> bannerPage = new Page<>(page, limit);
         crmBannerService.page(bannerPage, null);
+        log.info("banner" + bannerPage.getRecords());
         return R.ok().data("items", bannerPage.getRecords()).data("total", bannerPage.getTotal());
     }
 
@@ -39,6 +42,7 @@ public class BannerAdminController {
     @ApiOperation("添加Banner")
     @PostMapping("addBanner")
     public R addBanner(@ApiParam("Banner对象") @RequestBody CrmBanner crmBanner) {
+        log.info("banner信息" + crmBanner);
         crmBannerService.save(crmBanner);
         return R.ok();
     }
@@ -47,6 +51,7 @@ public class BannerAdminController {
     @ApiOperation(value = "获取Banner")
     @GetMapping("get/{id}")
     public R get(@ApiParam("bannerId") @PathVariable String id) {
+        log.info("bannerId" + id);
         CrmBanner banner = crmBannerService.getById(id);
         return R.ok().data("item", banner);
     }
@@ -55,6 +60,7 @@ public class BannerAdminController {
     @ApiOperation("修改Banner")
     @PutMapping("update")
     public R updateById(@ApiParam("Banner对象") @RequestBody CrmBanner banner) {
+        log.info("banner信息" + banner);
         crmBannerService.updateById(banner);
         return R.ok();
     }
@@ -63,6 +69,7 @@ public class BannerAdminController {
     @ApiOperation("删除Banner")
     @DeleteMapping("remove/{id}")
     public R remove(@ApiParam("bannerId") @PathVariable String id) {
+        log.info("bannerId" + id);
         crmBannerService.removeById(id);
         return R.ok();
     }
