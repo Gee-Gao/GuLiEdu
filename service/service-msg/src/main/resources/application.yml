@@ -24,3 +24,5 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+accesskey: LTAI4G5Zf81jhYfrfZpzpfx2
+screct: ukjsTIBpxy2WYlNxVtAhRct2SmJcNV

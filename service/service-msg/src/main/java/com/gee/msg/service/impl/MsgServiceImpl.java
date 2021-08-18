@@ -10,6 +10,7 @@ import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.gee.msg.service.MsgService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -21,12 +22,17 @@ import java.util.Map;
 @Service
 public class MsgServiceImpl implements MsgService {
 
+    @Value("${accesskey}")
+    public String accesskey;
+    @Value("${screct}")
+    public String secret;
+
     @Override
     public boolean send(Map<String, Object> param, String phone) {
         if(StringUtils.isEmpty(phone)) return false;
 
         DefaultProfile profile =
-                DefaultProfile.getProfile("default", "LTAI4G5Zf81jhYfrfZpzpfx2", "ukjsTIBpxy2WYlNxVtAhRct2SmJcNV");
+                DefaultProfile.getProfile("default", accesskey, "");
         IAcsClient client = new DefaultAcsClient(profile);
         //设置相关参数
         CommonRequest request = new CommonRequest();
