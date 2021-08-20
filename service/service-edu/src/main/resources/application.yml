@@ -40,3 +40,6 @@ mybatis-plus:
 feign:
   hystrix:
     enabled: true
+sensitiveWords:
+  - 法轮功比较好
+  - Fuck

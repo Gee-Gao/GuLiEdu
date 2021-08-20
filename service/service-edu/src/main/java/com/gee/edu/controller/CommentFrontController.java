@@ -10,6 +10,7 @@ import com.gee.edu.service.CommentService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,9 @@ public class CommentFrontController {
     private CommentService commentService;
     @Resource
     private UserClient userClient;
+
+    @Value("${sensitiveWords}")
+    private List<String> sensitiveWords;
 
     //根据课程id查询评论列表
     @ApiOperation(value = "根据课程id查询评论列表")
@@ -61,7 +65,19 @@ public class CommentFrontController {
     @ApiOperation(value = "添加评论")
     @PostMapping("auth/save")
     public R save(@RequestBody Comment comment, HttpServletRequest request) {
-        log.info("评论内容" + comment);
+        String content = comment.getContent();
+        log.info("评论内容" + content);
+        // 替换敏感词汇
+        for (String sensitiveWord : sensitiveWords) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < sensitiveWord.length(); i++) {
+                stringBuilder.append("*");
+            }
+            content = content.replaceAll(sensitiveWord, stringBuilder.toString());
+        }
+        // 设置没有敏感词的评论
+
+        comment.setContent(content);
         //通过token 获取用户id
         String memberId = JwtUtils.getMemberIdByJwtToken(request);
         log.info("用户id" + memberId);
