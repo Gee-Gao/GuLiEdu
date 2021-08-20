@@ -24,7 +24,7 @@ public class ConstantPropertiesUtil implements InitializingBean {
     public static String WX_OPEN_REDIRECT_URL;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         WX_OPEN_APP_ID = appId;
         WX_OPEN_APP_SECRET = appSecret;
         WX_OPEN_REDIRECT_URL = redirectUrl;

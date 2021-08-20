@@ -9,6 +9,7 @@ import com.gee.wx.utils.ConstantPropertiesUtil;
 import com.gee.wx.utils.HttpClientUtils;
 import com.google.gson.Gson;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,6 +30,7 @@ import java.util.HashMap;
 @CrossOrigin
 @EnableFeignClients
 @RequestMapping("/api/ucenter/wx")
+@Slf4j
 public class WxApiController {
     @Resource
     private UserClient userClient;
@@ -43,13 +45,15 @@ public class WxApiController {
 
         //对redirectUrl进行UrlEncoder编码
         String redirectUrl = ConstantPropertiesUtil.WX_OPEN_REDIRECT_URL;
+
         try {
             redirectUrl = URLEncoder.encode(redirectUrl, "utf-8");
         } catch (UnsupportedEncodingException e) {
-            System.out.println("转换编码失败");
+            log.error("转换编码失败");
         }
         String url = String.format(baseUrl, ConstantPropertiesUtil.WX_OPEN_APP_ID, redirectUrl
                 , "Gee");
+        log.info("url" + url);
         return "redirect:" + url;
     }
 
@@ -103,6 +107,9 @@ public class WxApiController {
                 member.setNickname(nickname);
                 userClient.registerWx(member);
             }
+
+            log.info("userInfo" + member);
+
             //使用jwt根据member对象生成token字符串
             String jwtToken = JwtUtils.getJwtToken(member.getId(), member.getNickname());
             //返回字符串，通过路径传递token字符串
