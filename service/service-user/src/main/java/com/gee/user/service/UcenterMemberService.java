@@ -21,4 +21,6 @@ public interface UcenterMemberService extends IService<UcenterMember> {
     UcenterMember getOpenIdMember(String openid, String avatar, String nickname);
 
     int countRegister(String day);
+
+    void changePassword(UcenterMember ucenterMember);
 }

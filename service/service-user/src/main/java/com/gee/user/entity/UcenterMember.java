@@ -24,7 +24,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="UcenterMember对象", description="会员表")
+@ApiModel(value = "UcenterMember对象", description = "会员表")
 public class UcenterMember implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,6 +38,11 @@ public class UcenterMember implements Serializable {
 
     @ApiModelProperty(value = "手机号")
     private String mobile;
+
+    @ApiModelProperty(value = "密码")
+    @TableField(exist = false)
+    private String oldPassword;
+
 
     @ApiModelProperty(value = "密码")
     private String password;

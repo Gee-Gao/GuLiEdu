@@ -11,6 +11,7 @@ import com.gee.user.service.UcenterMemberService;
 import com.google.gson.Gson;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,14 @@ import javax.servlet.http.HttpServletRequest;
 public class UcenterMemberController {
     @Resource
     private UcenterMemberService memberService;
+
+
+    @ApiOperation("修改密码")
+    @PostMapping("changePassword")
+    public R changePassword(@RequestBody UcenterMember ucenterMember){
+        memberService.changePassword(ucenterMember);
+        return R.ok();
+    }
 
     @ApiOperation("查询某一天注册人数")
     @GetMapping("countRegister/{day}")

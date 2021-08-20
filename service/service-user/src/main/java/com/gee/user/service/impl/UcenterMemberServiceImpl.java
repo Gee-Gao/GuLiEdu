@@ -1,5 +1,6 @@
 package com.gee.user.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gee.commonutils.JwtUtils;
@@ -90,10 +91,38 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
         return member;
     }
 
-    ////查询某一天注册人数
+    //查询某一天注册人数
     @Override
     public int countRegister(String day) {
         return baseMapper.countRegister(day);
+    }
+
+    // 修改密码
+    @Override
+    public void changePassword(UcenterMember ucenterMember) {
+        //校验参数
+        if (StringUtils.isEmpty(ucenterMember.getMobile())) {
+            throw new GuliException(20001, "账号不存在");
+        }
+
+        // 查询原密码是否正确
+        UcenterMember member = getOne(new LambdaQueryWrapper<UcenterMember>()
+                .eq(UcenterMember::getMobile, ucenterMember.getMobile())
+                .eq(UcenterMember::getPassword, MD5.encrypt(ucenterMember.getOldPassword())));
+
+        // 密码错误
+        if (member == null) {
+            throw new GuliException(20001, "原密码错误");
+        }
+
+        // 判断账号是否禁用
+        if (member.getIsDisabled()) {
+            throw new GuliException(20001, "账号已被禁用 ");
+        }
+
+        // 修改密码
+        member.setPassword(MD5.encrypt(ucenterMember.getPassword()));
+        updateById(member);
     }
 
     //注册
