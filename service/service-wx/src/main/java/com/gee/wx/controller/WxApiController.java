@@ -61,6 +61,7 @@ public class WxApiController {
     @ApiOperation("微信扫码回调")
     @GetMapping("callback")
     public String callback(String code, String state) {
+        log.info("wx扫码回调状态" + state);
         try {
             //通过code,请求微信固定地址，得到token和openid
             String baseAccessTokenUrl = "https://api.weixin.qq.com/sns/oauth2/access_token" +
