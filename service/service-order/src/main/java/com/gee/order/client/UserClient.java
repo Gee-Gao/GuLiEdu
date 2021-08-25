@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @author Gee
  */
 @Component
-@FeignClient("service-user")
+@FeignClient(name = "service-user", fallback = UserFileDegradeFeignClient.class)
 public interface UserClient {
     //根据id返回用户信息
     @PostMapping("/eduuser/member/getUserInfoOrder/{id}")

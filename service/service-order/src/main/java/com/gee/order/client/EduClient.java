@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @author Gee
  */
 @Component
-@FeignClient("service-edu")
+@FeignClient(name = "service-edu", fallback = EduFileDegradeFeignClient.class)
 public interface EduClient {
     //根据id查询课程信息
     @PostMapping("/eduservice/course/getCourseInfoOrder/{id}")
