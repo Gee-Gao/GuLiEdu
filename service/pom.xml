@@ -21,6 +21,7 @@
         <module>service-wx</module>
         <module>service-order</module>
         <module>service-sta</module>
+        <module>service-zfb</module>
     </modules>
 
     <dependencies>
