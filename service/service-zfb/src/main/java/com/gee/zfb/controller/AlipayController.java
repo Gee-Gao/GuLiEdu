@@ -7,6 +7,7 @@ import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.gee.commonutils.R;
 import com.gee.zfb.config.AlipayConfig;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/eduzfb")
 public class AlipayController {
     @GetMapping("alipay")
     public R pay(HttpServletResponse response) throws AlipayApiException, IOException {

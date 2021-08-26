@@ -40,6 +40,10 @@ spring:
           uri: lb://service-sta
           predicates:
             - Path=/edusta/**
+        - id: service-zfb
+          uri: lb://service-zfb
+          predicates:
+            - Path=/eduzfb/**
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
