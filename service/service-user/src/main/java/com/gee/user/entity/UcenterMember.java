@@ -39,10 +39,17 @@ public class UcenterMember implements Serializable {
     @ApiModelProperty(value = "手机号")
     private String mobile;
 
-    @ApiModelProperty(value = "密码")
+    @ApiModelProperty("原手机号")
+    @TableField(exist = false)
+    private String oldMobile;
+
+    @ApiModelProperty("验证码")
+    @TableField(exist = false)
+    private String code;
+
+    @ApiModelProperty(value = "原密码")
     @TableField(exist = false)
     private String oldPassword;
-
 
     @ApiModelProperty(value = "密码")
     private String password;

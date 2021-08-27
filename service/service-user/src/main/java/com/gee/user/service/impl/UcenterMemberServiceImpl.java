@@ -97,6 +97,34 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
         return baseMapper.countRegister(day);
     }
 
+    @Override
+    public void changeMobile(UcenterMember ucenterMember) {
+        //校验参数
+        if (StringUtils.isEmpty(ucenterMember.getOldMobile())) {
+            throw new GuliException(20001, "请输入原手机号");
+        }
+        String mobile = ucenterMember.getMobile();
+        if (StringUtils.isEmpty(mobile)) {
+            throw new GuliException(20001, "请输入新手机号");
+        }
+
+        //校验校验验证码
+        //从redis获取发送的验证码
+        String mobileCode = redisTemplate.opsForValue().get(mobile);
+        if (!ucenterMember.getCode().equals(mobileCode)) {
+            throw new GuliException(20001, "验证码错误");
+        }
+
+        Integer count = baseMapper.selectCount(new LambdaQueryWrapper<UcenterMember>()
+                .eq(UcenterMember::getMobile, mobile));
+
+        if(count>0){
+            throw new GuliException(20001, "手机号已被注册");
+        }
+
+        // 更新数据库
+        updateById(ucenterMember);
+    }
 
     // 修改密码
     @Override

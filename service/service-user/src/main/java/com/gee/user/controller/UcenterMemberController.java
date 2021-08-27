@@ -31,6 +31,13 @@ public class UcenterMemberController {
     private UcenterMemberService memberService;
 
 
+    @ApiOperation("修改手机号")
+    @PostMapping("changeMobile")
+    public R changeMobile(@RequestBody UcenterMember ucenterMember){
+        memberService.changeMobile(ucenterMember);
+        return R.ok();
+    }
+
     @ApiOperation("修改密码")
     @PostMapping("changePassword")
     public R changePassword(@RequestBody UcenterMember ucenterMember){

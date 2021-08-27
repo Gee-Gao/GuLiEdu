@@ -23,4 +23,6 @@ public interface UcenterMemberService extends IService<UcenterMember> {
     int countRegister(String day);
 
     void changePassword(UcenterMember ucenterMember);
+
+    void changeMobile(UcenterMember ucenterMember);
 }
