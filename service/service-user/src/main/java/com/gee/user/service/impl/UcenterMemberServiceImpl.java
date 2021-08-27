@@ -97,6 +97,7 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
         return baseMapper.countRegister(day);
     }
 
+
     // 修改密码
     @Override
     public void changePassword(UcenterMember ucenterMember) {
@@ -135,8 +136,7 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
         String code = registerVo.getCode();
 
         //校验参数
-        if (StringUtils.isEmpty(mobile) || StringUtils.isEmpty(mobile) ||
-                StringUtils.isEmpty(password) || StringUtils.isEmpty(code)) {
+        if (StringUtils.isEmpty(mobile)  || StringUtils.isEmpty(password) || StringUtils.isEmpty(code)) {
             throw new GuliException(20001, "注册失败");
         }
 
@@ -149,7 +149,7 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
 
         //查询数据库中是否存在相同的手机号码
         Integer count = baseMapper.selectCount(new QueryWrapper<UcenterMember>().eq("mobile", mobile));
-        if (count.intValue() > 0) {
+        if (count > 0) {
             throw new GuliException(20001, "手机号已被注册");
         }
 
