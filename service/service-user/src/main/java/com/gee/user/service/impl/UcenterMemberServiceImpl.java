@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -31,7 +32,7 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
 
     //登录
     @Override
-    public String login(UcenterMember ucenterMember) {
+    public String login(UcenterMember ucenterMember, HttpServletRequest request) {
         String mobile = ucenterMember.getMobile();
         String password = ucenterMember.getPassword();
 
@@ -57,7 +58,7 @@ public class UcenterMemberServiceImpl extends ServiceImpl<UcenterMemberMapper, U
         }
 
         //使用JWT生成token字符串
-        String token = JwtUtils.getJwtToken(member.getId(), member.getNickname());
+        String token = JwtUtils.getJwtTokenSecurity(member.getId(), member.getNickname(),request);
         return token;
     }
 

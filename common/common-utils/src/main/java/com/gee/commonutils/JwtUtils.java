@@ -36,6 +36,32 @@ public class JwtUtils {
         return JwtToken;
     }
 
+
+    public static String getJwtTokenSecurity(String id, String nickname, HttpServletRequest request) {
+
+        String requestIp = request.getRemoteAddr();
+        String userAgent = request.getHeader("user-agent");
+
+        String JwtToken = Jwts.builder()
+                //头信息部分
+                .setHeaderParam("typ", "JWT")
+                .setHeaderParam("alg", "HS256")
+                //主体部分
+                .setSubject("guli-user")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE))
+                .claim("id", id)
+                .claim("nickname", nickname)
+                // 增加用户独有的环境信息，提高防伪性
+                .claim("requestIp", requestIp)
+                .claim("userAgent",userAgent)
+                //签名部分
+                .signWith(SignatureAlgorithm.HS256, APP_SECRET)
+                .compact();
+
+        return JwtToken;
+    }
+
     /**
      * 判断token是否存在与有效
      *

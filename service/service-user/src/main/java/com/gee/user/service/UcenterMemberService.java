@@ -4,6 +4,8 @@ import com.gee.user.entity.UcenterMember;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.gee.user.entity.vo.RegisterVo;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * <p>
  * 会员表 服务类
@@ -14,7 +16,7 @@ import com.gee.user.entity.vo.RegisterVo;
  */
 public interface UcenterMemberService extends IService<UcenterMember> {
 
-    String login(UcenterMember ucenterMember);
+    String login(UcenterMember ucenterMember, HttpServletRequest request);
 
     void register(RegisterVo registerVo);
 

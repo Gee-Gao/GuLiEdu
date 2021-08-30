@@ -79,9 +79,9 @@ public class UcenterMemberController {
     //登录
     @ApiOperation(value = "登录")
     @PostMapping("/login")
-    public R login(@RequestBody UcenterMember ucenterMember) {
+    public R login(@RequestBody UcenterMember ucenterMember,HttpServletRequest request) {
         try {
-            String token = memberService.login(ucenterMember);
+            String token = memberService.login(ucenterMember,request);
             log.info("token" + token);
             return R.ok().data("token", token);
         } catch (GuliException e) {

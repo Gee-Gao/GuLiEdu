@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -60,7 +61,7 @@ public class WxApiController {
     //微信扫码回调
     @ApiOperation("微信扫码回调")
     @GetMapping("callback")
-    public String callback(String code, String state) {
+    public String callback(String code, String state, HttpServletRequest request) {
         log.info("wx扫码回调状态" + state);
         try {
             //通过code,请求微信固定地址，得到token和openid
@@ -112,7 +113,7 @@ public class WxApiController {
             log.info("userInfo" + member);
 
             //使用jwt根据member对象生成token字符串
-            String jwtToken = JwtUtils.getJwtToken(member.getId(), member.getNickname());
+            String jwtToken = JwtUtils.getJwtTokenSecurity(member.getId(), member.getNickname(),request);
             //返回字符串，通过路径传递token字符串
             return "redirect:http://localhost:3000?token=" + jwtToken;
         } catch (Exception e) {
