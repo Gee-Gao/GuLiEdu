@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * <p>
@@ -28,6 +29,15 @@ public class OrderController {
 
     @Resource
     private OrderService orderService;
+
+    // 获取创建订单前5的课程
+    @ApiOperation("获取创建订单前5的课程")
+    @GetMapping("queryCreateOrderTopFive")
+    public R queryCreateOrderTopFive() {
+        List<Order> orders = orderService.queryCreateOrderTopFive();
+        return R.ok().data("orderTopFive", orders);
+    }
+
 
     //创建订单
     @ApiOperation("创建订单")

@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gee.order.mapper.OrderMapper">
-
+    <select id="queryCreateOrderTopFive" resultType="com.gee.order.entity.Order">
+        SELECT course_id,
+               course_title,
+               course_cover,
+               teacher_name
+        FROM `t_order`
+        WHERE is_deleted = 0
+        GROUP BY course_id
+        ORDER BY COUNT(*) DESC LIMIT 5
+    </select>
 </mapper>

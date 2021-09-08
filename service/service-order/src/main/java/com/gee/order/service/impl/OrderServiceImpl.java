@@ -12,6 +12,7 @@ import com.gee.order.utils.OrderNoUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -28,6 +29,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     private EduClient eduClient;
     @Resource
     private UserClient userClient;
+    @Resource
+    private OrderMapper orderMapper;
+
+    @Override
+    public List<Order> queryCreateOrderTopFive() {
+        List<Order> orders = orderMapper.queryCreateOrderTopFive();
+        return orders;
+    }
 
     //创建订单
     @Override

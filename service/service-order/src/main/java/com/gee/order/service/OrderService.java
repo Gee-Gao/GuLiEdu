@@ -3,6 +3,8 @@ package com.gee.order.service;
 import com.gee.order.entity.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  * 订单 服务类
@@ -14,4 +16,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface OrderService extends IService<Order> {
 
     String createOrder(String courseId, String memberId);
+
+    List<Order> queryCreateOrderTopFive();
 }
