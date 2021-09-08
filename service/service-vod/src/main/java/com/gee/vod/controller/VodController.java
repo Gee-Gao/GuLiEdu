@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Gee
@@ -23,6 +25,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/eduvod/video")
 public class VodController {
+    private static Map<String, String> playAuthMap = new HashMap<>();
+
     @Resource
     private VodService vodService;
 
@@ -53,6 +57,12 @@ public class VodController {
     //根据视频id获取视频凭证
     @GetMapping("getPlayAuth/{id}")
     public R getPlayAuth(@ApiParam("视频id") @PathVariable String id) {
+        // 判断缓存中是否存在视频凭证
+        String playAuth = playAuthMap.get(id);
+        if (playAuth != null) {
+            return R.ok().data("playAuth", playAuth);
+        }
+
         try {
             //创建初始化对象
             DefaultAcsClient client = InitVodClient.initVodClient(ConstantPropertiesUtil.ACCESS_KEY_ID,
@@ -63,7 +73,8 @@ public class VodController {
             GetVideoPlayAuthResponse response = client.getAcsResponse(request);
 
             //得到播放凭证
-            String playAuth = response.getPlayAuth();
+            playAuth = response.getPlayAuth();
+            playAuthMap.put(id, playAuth);
             return R.ok().data("playAuth", playAuth);
         } catch (Exception e) {
             throw new GuliException(20001, "获取视频凭证失败");
