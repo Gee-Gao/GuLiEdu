@@ -3,6 +3,7 @@ package com.gee.order.service;
 import com.gee.order.entity.PayLog;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,4 +20,6 @@ public interface PayLogService extends IService<PayLog> {
     Map<String, String> queryPayStatus(String orderNo);
 
     void updateOrderStatus(Map<String, String> map);
+
+    List<PayLog> queryTotalMoneyPayTopFive();
 }

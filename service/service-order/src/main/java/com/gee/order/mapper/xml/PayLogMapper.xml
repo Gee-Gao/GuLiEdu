@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gee.order.mapper.PayLogMapper">
-
+    <select id="queryTotalMoneyPayTopFive" resultType="com.gee.order.entity.TopUser">
+        SELECT SUM(pl.total_fee) totalFee,
+               u.nickname,
+               u.avatar
+        FROM `t_pay_log` pl
+                     LEFT JOIN t_order o ON o.order_no = pl.order_no
+                     LEFT JOIN ucenter_member u ON o.member_id = u.id
+        WHERE u.is_deleted = 0
+          AND o.is_deleted = 0
+          AND pl.is_deleted = 0
+        GROUP BY o.member_id
+        ORDER BY SUM(pl.total_fee) DESC LIMIT 5
+    </select>
 </mapper>

@@ -3,6 +3,7 @@ package com.gee.order.controller;
 
 import com.gee.commonutils.R;
 import com.gee.order.client.ZfbClient;
+import com.gee.order.entity.PayLog;
 import com.gee.order.service.PayLogService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,6 +30,15 @@ public class PayLogController {
     private PayLogService payLogService;
     @Resource
     private ZfbClient zfbClient;
+
+    // 查询付款最多的前5个用户
+    @ApiOperation("查询付款最多的前5个用户")
+    @GetMapping("queryTotalMoneyPayTopFive")
+    public R queryTotalMoneyPayTopFive() {
+        List<PayLog> payLogs = payLogService.queryTotalMoneyPayTopFive();
+        return R.ok().data("payTopFive", payLogs);
+    }
+
 
     //生成微信支付二维码
     @ApiOperation("生成微信支付二维码")

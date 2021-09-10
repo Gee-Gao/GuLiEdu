@@ -11,12 +11,14 @@ import com.gee.order.service.PayLogService;
 import com.gee.order.utils.HttpClient;
 import com.gee.servicebase.exceptionhandler.GuliException;
 import com.github.wxpay.sdk.WXPayUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,9 +30,12 @@ import java.util.Map;
  * @since 2020-08-02
  */
 @Service
+@Slf4j
 public class PayLogServiceImpl extends ServiceImpl<PayLogMapper, PayLog> implements PayLogService {
     @Resource
     private OrderService orderService;
+    @Resource
+    private PayLogMapper payLogMapper;
 
     //查询订单状态
     @Override
@@ -52,8 +57,16 @@ public class PayLogServiceImpl extends ServiceImpl<PayLogMapper, PayLog> impleme
             Map<String, String> resultMap = WXPayUtil.xmlToMap(xml);
             return resultMap;
         } catch (Exception e) {
-            throw new GuliException(20001,"查询订单信息失败");
+            throw new GuliException(20001, "查询订单信息失败");
         }
+    }
+
+    // 查询付款最多的前5个用户
+    @Override
+    public List<PayLog> queryTotalMoneyPayTopFive() {
+        List<PayLog> payLogs = payLogMapper.queryTotalMoneyPayTopFive();
+        log.info("付款前5名" + payLogs);
+        return payLogs;
     }
 
     //更改订单状态
@@ -66,7 +79,7 @@ public class PayLogServiceImpl extends ServiceImpl<PayLogMapper, PayLog> impleme
         wrapper.eq("order_no", orderNo);
         Order order = orderService.getOne(wrapper);
         //更新订单状态
-        if(order.getStatus() == 1){
+        if (order.getStatus() == 1) {
             return;
         }
         order.setStatus(1);
@@ -89,7 +102,7 @@ public class PayLogServiceImpl extends ServiceImpl<PayLogMapper, PayLog> impleme
         try {
             //根据订单id获取订单信息
             QueryWrapper<Order> wrapper = new QueryWrapper<>();
-            wrapper.eq("order_no",orderNo);
+            wrapper.eq("order_no", orderNo);
             Order order = orderService.getOne(wrapper);
 
             Map m = new HashMap();
@@ -99,7 +112,7 @@ public class PayLogServiceImpl extends ServiceImpl<PayLogMapper, PayLog> impleme
             m.put("nonce_str", WXPayUtil.generateNonceStr());
             m.put("body", order.getCourseTitle());
             m.put("out_trade_no", orderNo);
-            m.put("total_fee", order.getTotalFee().multiply(new BigDecimal("100")).longValue()+"");
+            m.put("total_fee", order.getTotalFee().multiply(new BigDecimal("100")).longValue() + "");
             m.put("spbill_create_ip", "127.0.0.1");
             m.put("notify_url", "http://guli.shop/api/order/weixinPay/weixinNotify\n");
             m.put("trade_type", "NATIVE");
@@ -122,7 +135,7 @@ public class PayLogServiceImpl extends ServiceImpl<PayLogMapper, PayLog> impleme
             map.put("code_url", resultMap.get("code_url"));
             return map;
         } catch (Exception e) {
-           throw new GuliException(20001,"二维码生成失败");
+            throw new GuliException(20001, "二维码生成失败");
         }
     }
 }
