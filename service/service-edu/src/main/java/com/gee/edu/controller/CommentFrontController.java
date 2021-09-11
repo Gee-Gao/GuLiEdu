@@ -65,28 +65,34 @@ public class CommentFrontController {
     @ApiOperation(value = "添加评论")
     @PostMapping("auth/save")
     public R save(@RequestBody Comment comment, HttpServletRequest request) {
-        String content = comment.getContent();
-        log.info("评论内容" + content);
-        // 替换敏感词汇
-        for (String sensitiveWord : sensitiveWords) {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i < sensitiveWord.length(); i++) {
-                stringBuilder.append("*");
-            }
-            content = content.replaceAll(sensitiveWord, stringBuilder.toString());
-        }
-        // 设置没有敏感词的评论
-
-        comment.setContent(content);
         //通过token 获取用户id
         String memberId = JwtUtils.getMemberIdByJwtToken(request);
         log.info("用户id" + memberId);
+
         //如果token不存在，让用户进行登录
         if (StringUtils.isEmpty(memberId)) {
             return R.error().code(28004).message("请登录");
         }
 
-        //用户登录，设置id
+        // 获取评论内容
+        String content = comment.getContent();
+        log.info("评论内容" + content);
+        // 替换敏感词汇
+        for (String sensitiveWord : sensitiveWords) {
+            // 判断评论中是否包含当前敏感词
+            if(content.contains(sensitiveWord)){
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int i = 0; i < sensitiveWord.length(); i++) {
+                    stringBuilder.append("*");
+                }
+                content = content.replaceAll(sensitiveWord, stringBuilder.toString());
+            }
+        }
+
+        // 设置没有敏感词的评论
+        comment.setContent(content);
+
+        //用户已经登录，设置id
         comment.setMemberId(memberId);
         //远程调用service-user模块，获取用户信息
         R r = userClient.getUserInfoComment(memberId);
