@@ -2,9 +2,11 @@ package com.gee.edu.controller;
 
 
 import com.gee.commonutils.R;
+import com.gee.edu.entity.Subject;
 import com.gee.edu.entity.subject.OneSubject;
 import com.gee.edu.service.SubjectService;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -23,9 +25,20 @@ import java.util.List;
 @RestController
 @RequestMapping("/eduservice/subject")
 @CrossOrigin
+@Slf4j
 public class SubjectController {
     @Resource
     private SubjectService subjectService;
+
+
+    @ApiOperation("手动创建课程分类")
+    @PostMapping("addSubjectHand")
+    public R addSubjectHand(@RequestBody Subject subject) {
+        log.info("课程分类：" + subject);
+        subjectService.save(subject);
+        return R.ok();
+    }
+
 
     //添加课程分类
     //获取上传过来的文件，把文件内容读取过来
@@ -42,7 +55,7 @@ public class SubjectController {
     @GetMapping("getAllSubject")
     public R getAllSubject() {
         List<OneSubject> list = subjectService.getAllOneTwoSubject();
-        return R.ok().data("list",list);
+        return R.ok().data("list", list);
     }
 }
 
