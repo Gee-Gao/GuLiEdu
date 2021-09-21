@@ -10,6 +10,7 @@ import com.gee.vod.utils.ConstantPropertiesUtil;
 import com.gee.vod.utils.InitVodClient;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,7 +60,7 @@ public class VodController {
     public R getPlayAuth(@ApiParam("视频id") @PathVariable String id) {
         // 判断缓存中是否存在视频凭证
         String playAuth = playAuthMap.get(id);
-        if (playAuth != null) {
+        if (StringUtils.isNotBlank(playAuth)) {
             return R.ok().data("playAuth", playAuth);
         }
 

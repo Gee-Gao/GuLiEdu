@@ -47,12 +47,8 @@ public class TeacherController {
     @DeleteMapping("{id}")
     public R removeTeacher(@ApiParam(name = "id", value = "讲师ID", required = true) @PathVariable String id) {
         log.info("讲师id" + id);
-        boolean flag = teacherService.removeById(id);
-        if (flag) {
-            return R.ok();
-        } else {
-            return R.error();
-        }
+        teacherService.removeById(id);
+        return R.ok();
     }
 
     //分页查询

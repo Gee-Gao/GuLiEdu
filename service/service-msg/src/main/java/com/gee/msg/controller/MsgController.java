@@ -32,7 +32,6 @@ public class MsgController {
     @ApiOperation("发送短信")
     @GetMapping("send/{phone}")
     public R sendMsg(@ApiParam("手机号") @PathVariable("phone") String phone) {
-
         //从redis中获取验证码，如果有直接返回
         String code = redisTemplate.opsForValue().get(phone);
         if (!StringUtils.isEmpty(code)) {
@@ -47,16 +46,14 @@ public class MsgController {
         Map<String, Object> param = new HashMap<>();
         param.put("code", code);
         //调用service发送短信
-        boolean isSend = msgService.send(param, phone);
-        if (isSend) {
+        if (msgService.send(param, phone)) {
             //发送成功，把验证码保存到redis，并设置有效时间
             redisTemplate.opsForValue().set(phone, code, 5, TimeUnit.MINUTES);
-            log.info("redis保存成功");
+            log.info("redis保存成功,验证码为"+code);
             return R.ok();
         } else {
             log.error("短信发送失败");
             return R.error().message("短信发送失败");
         }
-
     }
 }

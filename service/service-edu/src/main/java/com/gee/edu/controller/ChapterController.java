@@ -71,12 +71,8 @@ public class ChapterController {
     @DeleteMapping("{chapterId}")
     public R deleteChapterInfo(@ApiParam("课程id") @PathVariable String chapterId) {
         log.info("章节id:{}", chapterId);
-        boolean flag = chapterService.deleteChapter(chapterId);
-        if (flag) {
-            return R.ok();
-        } else {
-            return R.error();
-        }
+        chapterService.deleteChapter(chapterId);
+        return R.ok();
     }
 }
 

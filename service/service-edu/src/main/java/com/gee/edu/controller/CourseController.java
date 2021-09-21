@@ -65,13 +65,9 @@ public class CourseController {
         //多条件组合查询,判断值是否为空，不为空拼接条件
         String title = courseQuery.getTitle();
         String status = courseQuery.getStatus();
-        if (!StringUtils.isEmpty(title)) {
-            wrapper.like("title", title);
-        }
 
-        if (!StringUtils.isEmpty(status)) {
-            wrapper.eq("status", status);
-        }
+        wrapper.like(!StringUtils.isEmpty(title), "title", title);
+        wrapper.eq(!StringUtils.isEmpty(status), "status", status);
 
         //调用方法实现条件查询分页
         courseService.page(pageCourse, wrapper);
