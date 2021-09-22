@@ -22,6 +22,7 @@
         <module>service-order</module>
         <module>service-sta</module>
         <module>service-zfb</module>
+        <module>service-chat</module>
     </modules>
 
     <dependencies>
