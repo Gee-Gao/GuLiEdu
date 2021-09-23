@@ -46,6 +46,12 @@ public class Chat {
     private String content;
 
     /**
+     * 逻辑删除 1（true）已删除， 0（false）未删除
+     */
+    @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
+    private Integer isDeleted;
+
+    /**
      * 创建时间
      */
     @TableField(value = "gmt_create")
