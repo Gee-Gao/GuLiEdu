@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gee.chat.mapper.ChatMapper">
+  <resultMap id="BaseResultMap" type="com.gee.chat.entity.Chat">
+    <!--@mbg.generated-->
+    <!--@Table chat-->
+    <id column="id" jdbcType="CHAR" property="id" />
+    <result column="send_user_id" jdbcType="CHAR" property="sendUserId" />
+    <result column="recevice_user_id" jdbcType="CHAR" property="receiveUserId" />
+    <result column="sign_status" jdbcType="INTEGER" property="signStatus" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, send_user_id, recevice_user_id, sign_status, content, gmt_create, gmt_modified
+  </sql>
+</mapper>
