@@ -1,6 +1,8 @@
 package com.gee.chat.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gee.servicebase.exceptionhandler.GuliException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -19,12 +21,34 @@ import java.util.List;
 public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat> implements ChatService {
 
     @Override
+    public List<Chat> queryChatRecord(Page<Chat> pageParam, Chat chat) {
+        String receiveUserId = chat.getReceiveUserId();
+        String sendUserId = chat.getSendUserId();
+
+        // 数据校验
+        if (StringUtils.isBlank(sendUserId)) {
+            throw new GuliException(20001, "发送人id不能为空");
+        }
+        if (StringUtils.isBlank(receiveUserId)) {
+            throw new GuliException(20001, "接收人id不能为空");
+        }
+
+        // 分页查询
+        IPage<Chat> page = page(pageParam, new LambdaQueryWrapper<Chat>()
+                .eq(Chat::getSendUserId, sendUserId)
+                .eq(Chat::getReceiveUserId, receiveUserId)
+                .eq(Chat::getIsDeleted, 0)
+                .orderByDesc(Chat::getGmtCreate));
+        return page.getRecords();
+    }
+
+    @Override
     public List<String> receiveUnSignMessage(Chat chat) {
         String receiveUserId = chat.getReceiveUserId();
         log.info("接收人id" + receiveUserId);
 
-        if(StringUtils.isBlank(receiveUserId)){
-            throw new GuliException(20001,"接收人id不能为空");
+        if (StringUtils.isBlank(receiveUserId)) {
+            throw new GuliException(20001, "接收人id不能为空");
         }
 
         // 根据接收人id获取未签收的消息

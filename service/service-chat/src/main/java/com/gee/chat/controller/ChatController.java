@@ -1,14 +1,13 @@
 package com.gee.chat.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gee.chat.entity.Chat;
 import com.gee.chat.service.ChatService;
 import com.gee.commonutils.R;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -35,5 +34,16 @@ public class ChatController {
     public R receiveMessage(@RequestBody Chat chat) {
         List<String> message = chatService.receiveUnSignMessage(chat);
         return R.ok().data("message", message);
+    }
+
+    @ApiOperation("查看历史记录")
+    @GetMapping("queryChatRecord/{page}")
+    public R queryChatRecord(
+            @ApiParam(name = "page", value = "当前页码", required = true)
+            @PathVariable Long page,
+            @RequestBody Chat chat) {
+        Page<Chat> pageParam = new Page<>(page, 10);
+        List<Chat> chats = chatService.queryChatRecord(pageParam, chat);
+        return R.ok().data("chats", chats);
     }
 }
