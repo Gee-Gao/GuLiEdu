@@ -19,6 +19,14 @@ public class ChatController {
     @Resource
     private ChatService chatService;
 
+    @ApiOperation("删除聊天记录")
+    @DeleteMapping("deleteHistoryChatById/{id}")
+    public R deleteHistoryChatById(@PathVariable Long id){
+        log.info("要删除的聊天记录id"+id);
+        chatService.removeById(id);
+        return R.ok();
+    }
+
     @ApiOperation("发送消息")
     @PostMapping("sendMessage")
     public R sendMessage(@RequestBody Chat chat) {
