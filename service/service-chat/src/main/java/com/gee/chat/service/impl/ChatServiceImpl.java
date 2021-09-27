@@ -3,6 +3,7 @@ package com.gee.chat.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.gee.chat.dto.ChatDTO;
 import com.gee.servicebase.exceptionhandler.GuliException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +22,74 @@ import java.util.List;
 public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat> implements ChatService {
 
     @Override
-    public List<Chat> queryChatRecord(Page<Chat> pageParam, Chat chat) {
+    public void deleteHistoryChatById(ChatDTO chat) {
+        // 数据校验
+        if (StringUtils.isBlank(chat.getUserId())) {
+            throw new GuliException(20001, "当前登录用户id不能为空");
+        }
+        if (StringUtils.isBlank(chat.getId())) {
+            throw new GuliException(20001, "id不能为空");
+        }
+
+        // 根据id查找聊天记录
+        Chat byId = getById(chat.getId());
+        if(byId==null){
+            return;
+        }
+
+        // 设置删除人id
+        String deleteUserId = byId.getHistoryDeleteUserId();
+        if (StringUtils.isBlank(deleteUserId)) {
+            byId.setHistoryDeleteUserId("|" + chat.getUserId() + "|");
+        } else {
+            byId.setHistoryDeleteUserId(deleteUserId + "|" + chat.getUserId() + "|");
+        }
+        // 修改数据库
+        updateById(byId);
+    }
+
+    @Override
+    public void deleteHistoryChatByTime(ChatDTO chat) {
+        // 数据校验
+        if (StringUtils.isBlank(chat.getUserId())) {
+            throw new GuliException(20001, "当前登录用户id不能为空");
+        }
+        if (chat.getStartTime() == null) {
+            throw new GuliException(20001, "开始时间不能为空");
+        }
+        if (chat.getEndTime() == null) {
+            throw new GuliException(20001, "结束时间不能为空");
+        }
+
+        // 获取发送人接收人id
+        String sendUserId = chat.getSendUserId();
+        String receiveUserId = chat.getReceiveUserId();
+
+        List<Chat> list = list(new LambdaQueryWrapper<Chat>()
+                .eq(Chat::getReceiveUserId, receiveUserId)
+                .eq(Chat::getSendUserId, sendUserId)
+                .between(Chat::getGmtCreate, chat.getStartTime(), chat.getEndTime()));
+
+        // 没有需要删除的聊天记录直接返回
+        if (list.size() == 0) {
+            return;
+        }
+
+        // 设置删除人id
+        list.forEach(item -> {
+            String deleteUserId = item.getHistoryDeleteUserId();
+            if (StringUtils.isBlank(deleteUserId)) {
+                item.setHistoryDeleteUserId("|" + chat.getUserId() + "|");
+            } else {
+                item.setHistoryDeleteUserId(deleteUserId + "|" + chat.getUserId() + "|");
+            }
+        });
+
+        updateBatchById(list);
+    }
+
+    @Override
+    public List<Chat> queryChatRecord(Page<Chat> pageParam, ChatDTO chat) {
         String receiveUserId = chat.getReceiveUserId();
         String sendUserId = chat.getSendUserId();
 
@@ -38,6 +106,7 @@ public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat> implements Ch
                 .eq(Chat::getSendUserId, sendUserId)
                 .eq(Chat::getReceiveUserId, receiveUserId)
                 .eq(Chat::getIsDeleted, 0)
+                .notLike(Chat::getHistoryDeleteUserId, "|" + chat.getUserId() + "|")
                 .orderByDesc(Chat::getGmtCreate));
         return page.getRecords();
     }

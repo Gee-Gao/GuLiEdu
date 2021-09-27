@@ -10,7 +10,7 @@ import lombok.Data;
 
 import java.util.Date;
 
-@ApiModel(value="com-gee-chat-entity-Chat")
+@ApiModel(value = "com-gee-chat-entity-Chat")
 @Data
 @TableName(value = "chat")
 public class Chat {
@@ -21,28 +21,28 @@ public class Chat {
      * 发送人id
      */
     @TableField(value = "send_user_id")
-    @ApiModelProperty(value="发送人id")
+    @ApiModelProperty(value = "发送人id")
     private String sendUserId;
 
     /**
      * 接收人id
      */
     @TableField(value = "receive_user_id")
-    @ApiModelProperty(value="接收人id")
+    @ApiModelProperty(value = "接收人id")
     private String receiveUserId;
 
     /**
      * 签收状态0未签收1已签收
      */
     @TableField(value = "sign_status")
-    @ApiModelProperty(value="签收状态0未签收1已签收")
+    @ApiModelProperty(value = "签收状态0未签收1已签收")
     private Integer signStatus;
 
     /**
      * 消息内容
      */
     @TableField(value = "content")
-    @ApiModelProperty(value="消息内容")
+    @ApiModelProperty(value = "消息内容")
     private String content;
 
     /**
@@ -55,13 +55,19 @@ public class Chat {
      * 创建时间
      */
     @TableField(value = "gmt_create")
-    @ApiModelProperty(value="创建时间")
+    @ApiModelProperty(value = "创建时间")
     private Date gmtCreate;
 
     /**
      * 修改时间
      */
     @TableField(value = "gmt_modified")
-    @ApiModelProperty(value="修改时间")
+    @ApiModelProperty(value = "修改时间")
     private Date gmtModified;
+
+    /**
+     * 聊天记录删除人
+     */
+    @ApiModelProperty(value = "聊天记录删除人")
+    private String historyDeleteUserId;
 }
