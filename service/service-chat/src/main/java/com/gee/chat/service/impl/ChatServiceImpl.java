@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gee.chat.dto.ChatDTO;
+import com.gee.servicebase.config.SensitiveWordsInit;
 import com.gee.servicebase.exceptionhandler.GuliException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,7 @@ import com.gee.chat.mapper.ChatMapper;
 import com.gee.chat.entity.Chat;
 import com.gee.chat.service.ChatService;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +22,31 @@ import java.util.List;
 @Service
 @Slf4j
 public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat> implements ChatService {
+
+    @Resource
+    private SensitiveWordsInit sensitiveWordsInit;
+
+    @Override
+    public void sendMessage(Chat chat) {
+        List<String> sensitiveWords = sensitiveWordsInit.getSensitiveWords();
+        String content = chat.getContent();
+        // 替换敏感词汇
+        for (String sensitiveWord : sensitiveWords) {
+            // 判断评论中是否包含当前敏感词
+            if (content.contains(sensitiveWord)) {
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int i = 0; i < sensitiveWord.length(); i++) {
+                    stringBuilder.append("*");
+                }
+                content = content.replaceAll(sensitiveWord, stringBuilder.toString());
+            }
+        }
+        // 设置没有敏感词的评论
+        chat.setContent(content);
+        // 设置签收状态为未签收
+        chat.setSignStatus(0);
+        save(chat);
+    }
 
     @Override
     public void deleteHistoryChatById(ChatDTO chat) {
@@ -33,7 +60,7 @@ public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat> implements Ch
 
         // 根据id查找聊天记录
         Chat byId = getById(chat.getId());
-        if(byId==null){
+        if (byId == null) {
             return;
         }
 

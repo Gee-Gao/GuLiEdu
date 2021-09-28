@@ -7,10 +7,10 @@ import com.gee.commonutils.R;
 import com.gee.edu.client.UserClient;
 import com.gee.edu.entity.Comment;
 import com.gee.edu.service.CommentService;
+import com.gee.servicebase.config.SensitiveWordsInit;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,9 +29,8 @@ public class CommentFrontController {
     private CommentService commentService;
     @Resource
     private UserClient userClient;
-
-    @Value("${sensitiveWords}")
-    private List<String> sensitiveWords;
+    @Resource
+    private SensitiveWordsInit sensitiveWordsInit;
 
     //根据课程id查询评论列表
     @ApiOperation(value = "根据课程id查询评论列表")
@@ -77,10 +76,13 @@ public class CommentFrontController {
         // 获取评论内容
         String content = comment.getContent();
         log.info("评论内容" + content);
+
+        List<String> sensitiveWords = sensitiveWordsInit.getSensitiveWords();
+
         // 替换敏感词汇
         for (String sensitiveWord : sensitiveWords) {
             // 判断评论中是否包含当前敏感词
-            if(content.contains(sensitiveWord)){
+            if (content.contains(sensitiveWord)) {
                 StringBuilder stringBuilder = new StringBuilder();
                 for (int i = 0; i < sensitiveWord.length(); i++) {
                     stringBuilder.append("*");

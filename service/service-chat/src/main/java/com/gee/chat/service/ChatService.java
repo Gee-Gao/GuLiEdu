@@ -15,4 +15,6 @@ public interface ChatService extends IService<Chat>{
     void deleteHistoryChatByTime(ChatDTO chat);
 
     void deleteHistoryChatById(ChatDTO chatDTO);
+
+    void sendMessage(Chat chat);
 }

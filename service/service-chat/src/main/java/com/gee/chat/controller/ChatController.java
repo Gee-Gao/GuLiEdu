@@ -39,9 +39,7 @@ public class ChatController {
     @ApiOperation("发送消息")
     @PostMapping("sendMessage")
     public R sendMessage(@RequestBody Chat chat) {
-        log.info("消息" + chat);
-        chat.setSignStatus(0);
-        chatService.save(chat);
+        chatService.sendMessage(chat);
         return R.ok();
     }
 

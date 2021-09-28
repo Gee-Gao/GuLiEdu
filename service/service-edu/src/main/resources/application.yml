@@ -40,5 +40,3 @@ mybatis-plus:
 feign:
   hystrix:
     enabled: true
-#多个关键词用逗号分隔，springboot会自动把逗号转成集合
-sensitiveWords: 法轮功比较好,Fuck,傻逼
