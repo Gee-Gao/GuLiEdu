@@ -27,6 +27,13 @@ public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat> implements Ch
     private SensitiveWordsInit sensitiveWordsInit;
 
     @Override
+    public void signMessage(List<Chat> chats) {
+        // 设置签收状态为已签收
+        chats.forEach(item -> item.setSignStatus(1));
+        updateBatchById(chats);
+    }
+
+    @Override
     public void sendMessage(Chat chat) {
         List<String> sensitiveWords = sensitiveWordsInit.getSensitiveWords();
         String content = chat.getContent();

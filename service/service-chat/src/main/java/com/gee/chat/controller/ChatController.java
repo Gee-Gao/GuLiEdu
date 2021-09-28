@@ -51,6 +51,15 @@ public class ChatController {
         return R.ok().data("message", message);
     }
 
+
+    @ApiOperation("签收消息")
+    @PostMapping("signMessage")
+    public R signMessage(@RequestBody List<Chat> chats){
+        chatService.signMessage(chats);
+        return R.ok();
+    }
+
+
     @ApiOperation("查看历史记录")
     @GetMapping("queryChatRecord/{page}")
     public R queryChatRecord(
