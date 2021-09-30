@@ -3,38 +3,34 @@ package com.gee.chat.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gee.chat.dto.ChatDTO;
+import com.gee.chat.entity.Chat;
+import com.gee.chat.mapper.ChatMapper;
+import com.gee.chat.service.ChatService;
 import com.gee.servicebase.config.SensitiveWordsInit;
 import com.gee.servicebase.exceptionhandler.GuliException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.gee.chat.mapper.ChatMapper;
-import com.gee.chat.entity.Chat;
-import com.gee.chat.service.ChatService;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Service
 @Slf4j
 public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat> implements ChatService {
-
     @Resource
     private SensitiveWordsInit sensitiveWordsInit;
 
     @Override
-    public void signMessage(List<Chat> chats) {
-        // 设置签收状态为已签收
-        chats.forEach(item -> item.setSignStatus(1));
-        updateBatchById(chats);
-    }
-
-    @Override
     public void sendMessage(Chat chat) {
+        // 数据校验
+        checkSendUserAndReceiverUser(chat.getSendUserId(), chat.getReceiveUserId());
+
         List<String> sensitiveWords = sensitiveWordsInit.getSensitiveWords();
         String content = chat.getContent();
         // 替换敏感词汇
@@ -56,14 +52,15 @@ public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat> implements Ch
     }
 
     @Override
+    public void signMessage(List<Chat> chats) {
+        // 设置签收状态为已签收
+        chats.forEach(item -> item.setSignStatus(1));
+        updateBatchById(chats);
+    }
+
+    @Override
     public void deleteHistoryChatById(ChatDTO chat) {
-        // 数据校验
-        if (StringUtils.isBlank(chat.getUserId())) {
-            throw new GuliException(20001, "当前登录用户id不能为空");
-        }
-        if (StringUtils.isBlank(chat.getId())) {
-            throw new GuliException(20001, "id不能为空");
-        }
+        checkCurrentUserAndChatId(chat.getUserId(), chat.getId());
 
         // 根据id查找聊天记录
         Chat byId = getById(chat.getId());
@@ -85,15 +82,8 @@ public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat> implements Ch
     @Override
     public void deleteHistoryChatByTime(ChatDTO chat) {
         // 数据校验
-        if (StringUtils.isBlank(chat.getUserId())) {
-            throw new GuliException(20001, "当前登录用户id不能为空");
-        }
-        if (chat.getStartTime() == null) {
-            throw new GuliException(20001, "开始时间不能为空");
-        }
-        if (chat.getEndTime() == null) {
-            throw new GuliException(20001, "结束时间不能为空");
-        }
+        checkCurrentUserAndChatId(chat.getUserId(), "messageId");
+        checkMessageTime(chat.getStartTime(), chat.getEndTime());
 
         // 获取发送人接收人id
         String sendUserId = chat.getSendUserId();
@@ -126,14 +116,7 @@ public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat> implements Ch
     public List<Chat> queryChatRecord(Page<Chat> pageParam, ChatDTO chat) {
         String receiveUserId = chat.getReceiveUserId();
         String sendUserId = chat.getSendUserId();
-
-        // 数据校验
-        if (StringUtils.isBlank(sendUserId)) {
-            throw new GuliException(20001, "发送人id不能为空");
-        }
-        if (StringUtils.isBlank(receiveUserId)) {
-            throw new GuliException(20001, "接收人id不能为空");
-        }
+        checkSendUserAndReceiverUser(receiveUserId, sendUserId);
 
         // 分页查询
         IPage<Chat> page = page(pageParam, new LambdaQueryWrapper<Chat>()
@@ -145,14 +128,10 @@ public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat> implements Ch
         return page.getRecords();
     }
 
+
     @Override
     public List<String> receiveUnSignMessage(Chat chat) {
-        String receiveUserId = chat.getReceiveUserId();
-        log.info("接收人id" + receiveUserId);
-
-        if (StringUtils.isBlank(receiveUserId)) {
-            throw new GuliException(20001, "接收人id不能为空");
-        }
+        checkSendUserAndReceiverUser("sendUserId", chat.getReceiveUserId());
 
         // 根据接收人id获取未签收的消息
         List<Chat> list = list(new LambdaQueryWrapper<Chat>()
@@ -168,5 +147,35 @@ public class ChatServiceImpl extends ServiceImpl<ChatMapper, Chat> implements Ch
         ArrayList<String> chats = new ArrayList<>(list.size());
         list.forEach(item -> chats.add(item.getContent()));
         return chats;
+    }
+
+    // 校验消息发送时间和结束时间
+    private void checkMessageTime(Date startTime, Date endTime) {
+        if (startTime == null) {
+            throw new GuliException(20001, "开始时间不能为空");
+        }
+        if (endTime == null) {
+            throw new GuliException(20001, "结束时间不能为空");
+        }
+    }
+
+    // 校验当前登录用户id和消息id
+    private void checkCurrentUserAndChatId(String userId, String messageId) {
+        if (StringUtils.isBlank(userId)) {
+            throw new GuliException(20001, "当前登录用户id不能为空");
+        }
+        if (StringUtils.isBlank(messageId)) {
+            throw new GuliException(20001, "id不能为空");
+        }
+    }
+
+    // 校验发送人和接收人id
+    private void checkSendUserAndReceiverUser(String sendUserId, String receiveUserId) {
+        if (StringUtils.isBlank(sendUserId)) {
+            throw new GuliException(20001, "发送人id不能为空");
+        }
+        if (StringUtils.isBlank(receiveUserId)) {
+            throw new GuliException(20001, "接收人id不能为空");
+        }
     }
 }
