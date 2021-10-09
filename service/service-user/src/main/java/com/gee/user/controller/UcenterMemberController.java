@@ -5,8 +5,10 @@ import com.gee.commonutils.JwtUtils;
 import com.gee.commonutils.R;
 import com.gee.commonutils.vo.UcenterMemberOrderVo;
 import com.gee.servicebase.exceptionhandler.GuliException;
+import com.gee.user.entity.FriendRequest;
 import com.gee.user.entity.UcenterMember;
 import com.gee.user.entity.vo.RegisterVo;
+import com.gee.user.service.FriendRequestService;
 import com.gee.user.service.UcenterMemberService;
 import com.google.gson.Gson;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +31,15 @@ import javax.servlet.http.HttpServletRequest;
 public class UcenterMemberController {
     @Resource
     private UcenterMemberService memberService;
+    @Resource
+    private FriendRequestService friendRequestService;
+
+    @ApiOperation("发送添加好友请求")
+    @PostMapping("sendAddFriendRequest")
+    public R sendAddFriendRequest(@RequestBody FriendRequest friendRequest){
+        friendRequestService.save(friendRequest);
+        return R.ok();
+    }
 
 
     @ApiOperation("修改手机号")
