@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author Gee
@@ -33,6 +34,20 @@ public class UcenterMemberController {
     private UcenterMemberService memberService;
     @Resource
     private FriendRequestService friendRequestService;
+
+
+    @PostMapping("handlerAddFriendRequest")
+    public R handlerAddFriendRequest(@RequestBody FriendRequest friendRequest){
+        friendRequestService.handlerAddFriendRequest(friendRequest);
+        return R.ok();
+    }
+
+    @GetMapping("queryAddFriendRequest/{userId}")
+    public R queryAddFriendRequest(@PathVariable String userId){
+       List<FriendRequest> list = friendRequestService.queryAddFriendRequest(userId);
+       return R.ok().data("friendRequests",list);
+    }
+
 
     @ApiOperation("发送添加好友请求")
     @PostMapping("sendAddFriendRequest")

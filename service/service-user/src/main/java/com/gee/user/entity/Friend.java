@@ -8,9 +8,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
-
 @Data
-public class FriendRequest {
+public class Friend {
     @ApiModelProperty(value = "会员id")
     @TableId(value = "id", type = IdType.ID_WORKER_STR)
     private String id;
@@ -20,10 +19,6 @@ public class FriendRequest {
 
     @ApiModelProperty(value = "接收人id")
     private String receiveUserId;
-
-    @ApiModelProperty(value = "处理结果，0为拒绝，1为同意")
-    @TableField(exist = false)
-    private Integer handlerResult;
 
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty(value = "创建时间")
