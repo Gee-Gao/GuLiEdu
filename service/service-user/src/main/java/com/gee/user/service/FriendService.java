@@ -5,4 +5,5 @@ import com.gee.user.entity.Friend;
 
 public interface FriendService extends IService<Friend> {
 
+    void remarkForFriend(Friend friend);
 }

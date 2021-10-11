@@ -20,6 +20,9 @@ public class Friend {
     @ApiModelProperty(value = "接收人id")
     private String receiveUserId;
 
+    @ApiModelProperty(value = "备注")
+    private String remark;
+
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty(value = "创建时间")
     private Date gmtCreate;

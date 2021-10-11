@@ -10,6 +10,7 @@ import com.gee.user.entity.FriendRequest;
 import com.gee.user.entity.UcenterMember;
 import com.gee.user.entity.vo.RegisterVo;
 import com.gee.user.service.FriendRequestService;
+import com.gee.user.service.FriendService;
 import com.gee.user.service.UcenterMemberService;
 import com.google.gson.Gson;
 import io.swagger.annotations.ApiOperation;
@@ -35,10 +36,20 @@ public class UcenterMemberController {
     private UcenterMemberService memberService;
     @Resource
     private FriendRequestService friendRequestService;
+    @Resource
+    private FriendService friendService;
+
+    @ApiOperation("给好友添加备注")
+    @PostMapping("remarkForFriend")
+    public R remarkForFriend(@RequestBody Friend friend) {
+        friendService.remarkForFriend(friend);
+        return R.ok();
+    }
+
 
     @ApiOperation("删除好友")
     @PostMapping("deleteFriend")
-    public R deleteFriend(@RequestBody Friend friend){
+    public R deleteFriend(@RequestBody Friend friend) {
         friendRequestService.deleteFriend(friend);
         return R.ok();
     }
