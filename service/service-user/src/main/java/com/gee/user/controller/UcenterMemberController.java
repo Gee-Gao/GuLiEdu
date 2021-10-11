@@ -5,6 +5,7 @@ import com.gee.commonutils.JwtUtils;
 import com.gee.commonutils.R;
 import com.gee.commonutils.vo.UcenterMemberOrderVo;
 import com.gee.servicebase.exceptionhandler.GuliException;
+import com.gee.user.entity.Friend;
 import com.gee.user.entity.FriendRequest;
 import com.gee.user.entity.UcenterMember;
 import com.gee.user.entity.vo.RegisterVo;
@@ -35,23 +36,32 @@ public class UcenterMemberController {
     @Resource
     private FriendRequestService friendRequestService;
 
+    @ApiOperation("删除好友")
+    @PostMapping("deleteFriend")
+    public R deleteFriend(@RequestBody Friend friend){
+        friendRequestService.deleteFriend(friend);
+        return R.ok();
+    }
 
+
+    @ApiOperation("处理好友请求")
     @PostMapping("handlerAddFriendRequest")
-    public R handlerAddFriendRequest(@RequestBody FriendRequest friendRequest){
+    public R handlerAddFriendRequest(@RequestBody FriendRequest friendRequest) {
         friendRequestService.handlerAddFriendRequest(friendRequest);
         return R.ok();
     }
 
+    @ApiOperation("查询添加好友请求")
     @GetMapping("queryAddFriendRequest/{userId}")
-    public R queryAddFriendRequest(@PathVariable String userId){
-       List<FriendRequest> list = friendRequestService.queryAddFriendRequest(userId);
-       return R.ok().data("friendRequests",list);
+    public R queryAddFriendRequest(@PathVariable String userId) {
+        List<FriendRequest> list = friendRequestService.queryAddFriendRequest(userId);
+        return R.ok().data("friendRequests", list);
     }
 
 
     @ApiOperation("发送添加好友请求")
     @PostMapping("sendAddFriendRequest")
-    public R sendAddFriendRequest(@RequestBody FriendRequest friendRequest){
+    public R sendAddFriendRequest(@RequestBody FriendRequest friendRequest) {
         friendRequestService.save(friendRequest);
         return R.ok();
     }
@@ -59,14 +69,14 @@ public class UcenterMemberController {
 
     @ApiOperation("修改手机号")
     @PostMapping("changeMobile")
-    public R changeMobile(@RequestBody UcenterMember ucenterMember){
+    public R changeMobile(@RequestBody UcenterMember ucenterMember) {
         memberService.changeMobile(ucenterMember);
         return R.ok();
     }
 
     @ApiOperation("修改密码")
     @PostMapping("changePassword")
-    public R changePassword(@RequestBody UcenterMember ucenterMember){
+    public R changePassword(@RequestBody UcenterMember ucenterMember) {
         memberService.changePassword(ucenterMember);
         return R.ok();
     }
@@ -105,9 +115,9 @@ public class UcenterMemberController {
     //登录
     @ApiOperation(value = "登录")
     @PostMapping("/login")
-    public R login(@RequestBody UcenterMember ucenterMember,HttpServletRequest request) {
+    public R login(@RequestBody UcenterMember ucenterMember, HttpServletRequest request) {
         try {
-            String token = memberService.login(ucenterMember,request);
+            String token = memberService.login(ucenterMember, request);
             log.info("token" + token);
             return R.ok().data("token", token);
         } catch (GuliException e) {

@@ -45,4 +45,15 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestServiceMa
         // 删除好友请求
         removeById(friendRequest.getId());
     }
+
+    @Override
+    public void deleteFriend(Friend friend) {
+        // 双向删除好友
+        friendService.remove(new LambdaQueryWrapper<Friend>()
+                .eq(Friend::getSendUserId, friend.getSendUserId())
+                .eq(Friend::getReceiveUserId, friend.getReceiveUserId()));
+        friendService.remove(new LambdaQueryWrapper<Friend>()
+                .eq(Friend::getSendUserId, friend.getReceiveUserId())
+                .eq(Friend::getReceiveUserId, friend.getSendUserId()));
+    }
 }
