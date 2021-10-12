@@ -6,6 +6,7 @@ import com.gee.commonutils.vo.UcenterMemberOrderVo;
 import com.gee.order.client.EduClient;
 import com.gee.order.client.UserClient;
 import com.gee.order.entity.Order;
+import com.gee.order.filter.LocalBloomFilter;
 import com.gee.order.mapper.OrderMapper;
 import com.gee.order.service.OrderService;
 import com.gee.order.utils.OrderNoUtil;
@@ -24,7 +25,8 @@ import java.util.List;
  */
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
-
+    @Resource
+    private LocalBloomFilter localBloomFilter;
     @Resource
     private EduClient eduClient;
     @Resource
@@ -58,6 +60,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setStatus(0);
         order.setPayType(1);
         baseMapper.insert(order);
+        localBloomFilter.put(order.getOrderNo());
         return order.getOrderNo();
     }
 }
