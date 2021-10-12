@@ -8,6 +8,7 @@ import com.gee.servicebase.exceptionhandler.GuliException;
 import com.gee.user.entity.Friend;
 import com.gee.user.entity.FriendRequest;
 import com.gee.user.entity.UcenterMember;
+import com.gee.user.entity.vo.FriendVo;
 import com.gee.user.entity.vo.RegisterVo;
 import com.gee.user.service.FriendRequestService;
 import com.gee.user.service.FriendService;
@@ -38,6 +39,12 @@ public class UcenterMemberController {
     private FriendRequestService friendRequestService;
     @Resource
     private FriendService friendService;
+
+    @GetMapping("queryFriendList/{userId}")
+    public R queryFriendList(@PathVariable String userId) {
+        List<FriendVo> friends = friendService.queryFriendList(userId);
+        return R.ok().data("friends",friends);
+    }
 
     @ApiOperation("给好友添加备注")
     @PostMapping("remarkForFriend")
