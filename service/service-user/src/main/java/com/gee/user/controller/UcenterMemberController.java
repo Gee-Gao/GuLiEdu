@@ -40,10 +40,11 @@ public class UcenterMemberController {
     @Resource
     private FriendService friendService;
 
+    @ApiOperation("查询好友列表")
     @GetMapping("queryFriendList/{userId}")
     public R queryFriendList(@PathVariable String userId) {
         List<FriendVo> friends = friendService.queryFriendList(userId);
-        return R.ok().data("friends",friends);
+        return R.ok().data("friends", friends);
     }
 
     @ApiOperation("给好友添加备注")
