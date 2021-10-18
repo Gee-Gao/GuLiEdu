@@ -23,7 +23,9 @@ public class FriendRequestScheduling {
         long time = now.getTime();
         long sevenDays = 1000 * 60 * 60 * 24 * 7L;
         Date sevenDaysAgo = new Date(time - sevenDays);
-        friendRequestService.remove(new LambdaQueryWrapper<FriendRequest>()
+        FriendRequest friendRequest = new FriendRequest();
+        friendRequest.setIsExpire(1);
+        friendRequestService.update(friendRequest, new LambdaQueryWrapper<FriendRequest>()
                 .between(FriendRequest::getGmtCreate, sevenDaysAgo, now));
     }
 

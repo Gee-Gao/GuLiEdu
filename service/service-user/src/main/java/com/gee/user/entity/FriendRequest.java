@@ -21,6 +21,9 @@ public class FriendRequest {
     @ApiModelProperty(value = "接收人id")
     private String receiveUserId;
 
+    @ApiModelProperty(value = "过期状态，0未过期，1为过期")
+    private Integer isExpire;
+
     @ApiModelProperty(value = "处理结果，0为拒绝，1为同意")
     @TableField(exist = false)
     private Integer handlerResult;

@@ -29,6 +29,17 @@ public class FriendRequestServiceImpl extends ServiceImpl<FriendRequestServiceMa
     @Override
     @Transactional
     public void handlerAddFriendRequest(FriendRequest friendRequest) {
+        FriendRequest byId = getById(friendRequest.getId());
+        if (byId == null) {
+            throw new GuliException(20001, "该请求不存在");
+        }
+
+        // 七天前的请求
+        if (byId.getIsExpire() == 1) {
+            removeById(friendRequest.getId());
+            throw new GuliException(20001, "该请求已过期");
+        }
+
         if (friendRequest.getHandlerResult() == null) {
             throw new GuliException(20001, "未选择是否同意");
         } else if (friendRequest.getHandlerResult().equals(1)) {
