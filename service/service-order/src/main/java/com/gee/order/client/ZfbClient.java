@@ -8,6 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @FeignClient(name = "service-zfb", fallback = ZfbFileDegradeFeignClient.class)
 public interface ZfbClient {
-    @GetMapping("alipay")
+    @GetMapping("eduzfb/alipay")
     R pay(HttpServletResponse response);
 }
