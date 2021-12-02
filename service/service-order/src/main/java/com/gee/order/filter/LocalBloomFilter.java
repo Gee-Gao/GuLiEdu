@@ -18,9 +18,7 @@ public class LocalBloomFilter {
 
     public void init() {
         boomFilter = BloomFilter.create(Funnels.stringFunnel(Charset.forName("utf-8")), 1000000);
-        orderService.list(null).forEach(item -> {
-            boomFilter.put(item.getOrderNo());
-        });
+        orderService.list(null).forEach(item -> boomFilter.put(item.getOrderNo()));
     }
 
     public void put(Object object) {
